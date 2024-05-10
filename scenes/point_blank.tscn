@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://1yxoi5kmq2xq"]
+
+[ext_resource type="Script" path="res://scripts/PointBlank.gd" id="1_y6yec"]
+[ext_resource type="Texture2D" uid="uid://dbowgo75yo6s1" path="res://assets/pointBlank.png" id="2_3syry"]
+
+[node name="PointBlank" type="Area2D"]
+script = ExtResource("1_y6yec")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_3syry")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+[node name="Timer" type="Timer" parent="."]
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
