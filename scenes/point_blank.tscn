@@ -7,7 +7,6 @@
 radius = 298.015
 
 [node name="PointBlank" type="Area2D" groups=["enemy_hitbox"]]
-show_behind_parent = true
 script = ExtResource("1_y6yec")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
