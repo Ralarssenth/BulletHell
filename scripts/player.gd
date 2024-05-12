@@ -54,6 +54,11 @@ func damaged():
 	print("player took damage")
 	Globals.player_damaged.emit()
 	
+	# give the player 1s of invuln
+	$CollisionShape2D.set_deferred("disabled", true)
+	await get_tree().create_timer(1.0).timeout
+	$CollisionShape2D.set_deferred("disabled", false)
+	
 	
 
 func _on_player_died():

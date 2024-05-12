@@ -21,9 +21,7 @@ func shoot(angle):
 func spawnPointBlank(_size:float, _timer:float):
 	var pointBlank = pointBlank_node.instantiate()
 	
-	pointBlank.position = global_position
-	pointBlank.size = _size
-	pointBlank.timer = _timer
+	pointBlank.init(position, _size, _timer)
 	
 	get_tree().current_scene.call_deferred("add_child", pointBlank)
 	print("pointBlank added to scene with params size: " + str(_size) + " and timer: " + str(_timer))
@@ -33,4 +31,7 @@ func _on_speed_timeout():
 
 
 func _on_point_blank_timeout():
-	spawnPointBlank(1.0, 1.0)
+	var recast_timer = 3.0
+	spawnPointBlank(100.0, recast_timer)
+	$PointBlank.set_wait_time(recast_timer)
+	$PointBlank.start()

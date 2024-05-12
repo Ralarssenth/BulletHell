@@ -7,15 +7,18 @@
 radius = 298.015
 
 [node name="PointBlank" type="Area2D" groups=["enemy_hitbox"]]
+show_behind_parent = true
 script = ExtResource("1_y6yec")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0.0980392)
 texture = ExtResource("2_3syry")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_p1ngy")
+disabled = true
 
-[node name="Timer" type="Timer" parent="."]
-autostart = true
+[node name="LingeringTimer" type="Timer" parent="."]
+one_shot = true
 
-[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="timeout" from="LingeringTimer" to="." method="_on_lingering_timer_timeout"]
