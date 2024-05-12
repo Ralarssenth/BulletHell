@@ -3,10 +3,10 @@
 [ext_resource type="Script" path="res://scripts/Bullet.gd" id="1_18qvt"]
 [ext_resource type="Texture2D" uid="uid://dbowgo75yo6s1" path="res://assets/pointBlank.png" id="2_rba37"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_jkb8b"]
-size = Vector2(122, 125)
+[sub_resource type="CircleShape2D" id="CircleShape2D_cf1hj"]
+radius = 30.104
 
-[node name="Bullet" type="Area2D"]
+[node name="Bullet" type="Area2D" groups=["enemy_hitbox"]]
 script = ExtResource("1_18qvt")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
@@ -14,9 +14,11 @@ scale = Vector2(0.1, 0.1)
 texture = ExtResource("2_rba37")
 
 [node name="VisibleOnScreenEnabler2D" type="VisibleOnScreenEnabler2D" parent="."]
+position = Vector2(-9.53674e-07, -0.5)
+scale = Vector2(2.1, 2.05)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -0.5)
-shape = SubResource("RectangleShape2D_jkb8b")
+shape = SubResource("CircleShape2D_cf1hj")
 
 [connection signal="screen_exited" from="VisibleOnScreenEnabler2D" to="." method="_on_screen_exited"]

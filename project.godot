@@ -15,6 +15,10 @@ run/main_scene="res://scenes/boss_room.tscn"
 config/features=PackedStringArray("4.2", "Mobile")
 config/icon="res://assets/icon.svg"
 
+[autoload]
+
+Globals="*res://scripts/globals.gd"
+
 [rendering]
 
 renderer/rendering_method="mobile"

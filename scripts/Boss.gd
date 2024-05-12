@@ -1,4 +1,4 @@
-extends CharacterBody2D
+extends Node2D
 
 var theta: float = 0.0
 @export_range(0,2*PI) var alpha: float = 0.0
