@@ -69,6 +69,8 @@ func toggle_tight(on):
 func _on_area_entered(area):
 	if area.is_in_group("enemy_hitbox"):
 		damaged()
+	if area.is_in_group("bullet"):
+		area.queue_free()
 
 
 func damaged():
