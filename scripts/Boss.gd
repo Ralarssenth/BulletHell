@@ -38,11 +38,11 @@ func spawn_donut(_size:float, _density:int, _timer:float):
 	
 
 
-func spawn_line_attack(_angle:float, _timer:float, _linger:float, _type:String):
+func spawn_line_attack(_angle:float, _timer:float, _linger:float, _type:String, _rotations:int):
 	var line_attack = line_attack_node.instantiate()
 	
 	get_tree().current_scene.call_deferred("add_child", line_attack)
-	line_attack.init(position, _angle, _timer, _linger, _type)
+	line_attack.init(position, _angle, _timer, _linger, _type, _rotations)
 
 func _on_speed_timeout():
 	shoot(theta)
@@ -51,20 +51,22 @@ func _on_speed_timeout():
 func _on_point_blank_timeout():
 	var recast_timer = 3.0
 	spawn_pointBlank(100.0, recast_timer, 0.5)
-	$DonutTimer.set_wait_time(recast_timer)
-	$DonutTimer.start()
+	$LineTimer.set_wait_time(recast_timer)
+	$LineTimer.start()
 
 
 func _on_donut_timer_timeout():
 	var recast_timer = 3.0
 	spawn_donut(100.0, 32, recast_timer)
-	$LineTimer.set_wait_time(recast_timer)
-	$LineTimer.start()
+	$PointBlank.set_wait_time(recast_timer)
+	$PointBlank.start()
 
 
 func _on_line_timer_timeout():
-	var recast_timer = 3.0
-	spawn_line_attack(Globals.VERTICAL, 0.5, 2.5, "spin")
-	$PointBlank.set_wait_time(recast_timer)
-	$PointBlank.start()
+	var recast_timer = 5.0
+	spawn_line_attack(Globals.VERTICAL, 1.0, 4.0, "spin", 1)
+	spawn_line_attack(Globals.HORIZONTAL, 1.0, 4.0, "spin", 1)
+	$DonutTimer.set_wait_time(recast_timer)
+	$DonutTimer.start()
+	
 	
