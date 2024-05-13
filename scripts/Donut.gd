@@ -7,12 +7,12 @@ var timer:float = 3.0
 var radius = 100
 
 var theta:float = 0.0
-var delta:float
+var alpha:float
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	delta = (2.0 * PI) / bullet_density
+	alpha = (2.0 * PI) / bullet_density
 	$DelayTimer.set_wait_time(timer)
 	$DelayTimer.start()
 	var tween = create_tween()
@@ -42,7 +42,7 @@ func burst():
 
 
 func get_vector(angle):
-	theta = angle + delta
+	theta = angle + alpha
 	return Vector2(cos(theta), sin(theta))
 
 

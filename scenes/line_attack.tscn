@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://u4wmya6ayiw0"]
+
+[ext_resource type="Texture2D" uid="uid://b4e46ty7iwe5u" path="res://assets/lineAttack.png" id="1_bickg"]
+[ext_resource type="Script" path="res://scripts/line_attack.gd" id="1_ohocd"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ngqds"]
+size = Vector2(600, 600)
+
+[node name="LineAttack" type="Area2D" groups=["enemy_hitbox"]]
+script = ExtResource("1_ohocd")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0.0980392)
+scale = Vector2(5, 0.2)
+texture = ExtResource("1_bickg")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+scale = Vector2(5, 0.2)
+shape = SubResource("RectangleShape2D_ngqds")
+disabled = true
+
+[node name="LingeringTimer" type="Timer" parent="."]
+
+[connection signal="timeout" from="LingeringTimer" to="." method="_on_lingering_timer_timeout"]

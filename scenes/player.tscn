@@ -7,8 +7,8 @@
 [ext_resource type="Texture2D" uid="uid://7tuydk1vohe5" path="res://assets/player/head.png" id="4_8dcyw"]
 [ext_resource type="Texture2D" uid="uid://dn3vltlxxv0k2" path="res://assets/player/legFront.png" id="5_h6d54"]
 [ext_resource type="Texture2D" uid="uid://bt64yvgv4a1ke" path="res://assets/player/armFront.png" id="6_rqt5e"]
-[ext_resource type="Texture2D" uid="uid://bpdmease50tqw" path="res://assets/donut.png" id="8_bkerv"]
-[ext_resource type="Texture2D" uid="uid://dbowgo75yo6s1" path="res://assets/pointBlank.png" id="9_3f4ef"]
+[ext_resource type="Texture2D" uid="uid://c1r6pj5yksvu" path="res://assets/player/donut.png" id="8_5o2e1"]
+[ext_resource type="Texture2D" uid="uid://6ybeiiwy8kwd" path="res://assets/player/pointBlank.png" id="9_vqaj3"]
 
 [sub_resource type="Animation" id="Animation_maaag"]
 length = 0.001
@@ -277,12 +277,12 @@ shape = SubResource("CircleShape2D_vsph0")
 
 [node name="Normal" type="Sprite2D" parent="CollisionShape2D"]
 scale = Vector2(0.15, 0.15)
-texture = ExtResource("8_bkerv")
+texture = ExtResource("8_5o2e1")
 
 [node name="Tight" type="Sprite2D" parent="CollisionShape2D"]
 visible = false
 position = Vector2(-0.499998, -0.5)
 scale = Vector2(0.105, 0.105)
-texture = ExtResource("9_3f4ef")
+texture = ExtResource("9_vqaj3")
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]

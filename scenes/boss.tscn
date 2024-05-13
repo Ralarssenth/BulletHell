@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://bahxyclakwvh0"]
+[gd_scene load_steps=7 format=3 uid="uid://bahxyclakwvh0"]
 
 [ext_resource type="Script" path="res://scripts/Boss.gd" id="1_xkkq8"]
 [ext_resource type="Texture2D" uid="uid://bf4n407w1eenh" path="res://assets/icon.svg" id="2_6h68a"]
 [ext_resource type="PackedScene" uid="uid://hqh15ic51d4t" path="res://scenes/bullet.tscn" id="2_umsnh"]
 [ext_resource type="PackedScene" uid="uid://1yxoi5kmq2xq" path="res://scenes/point_blank.tscn" id="3_ce7rw"]
 [ext_resource type="PackedScene" uid="uid://d6v3jyvlpbc5" path="res://scenes/donut.tscn" id="5_u6ebe"]
+[ext_resource type="PackedScene" uid="uid://u4wmya6ayiw0" path="res://scenes/line_attack.tscn" id="6_v001s"]
 
 [node name="Boss" type="Sprite2D"]
 texture = ExtResource("2_6h68a")
@@ -13,6 +14,7 @@ alpha = 0.643
 bullet_node = ExtResource("2_umsnh")
 pointBlank_node = ExtResource("3_ce7rw")
 donut_node = ExtResource("5_u6ebe")
+line_attack_node = ExtResource("6_v001s")
 
 [node name="BulletShootSpeed" type="Timer" parent="."]
 wait_time = 0.1
@@ -23,8 +25,12 @@ one_shot = true
 
 [node name="DonutTimer" type="Timer" parent="."]
 one_shot = true
+
+[node name="LineTimer" type="Timer" parent="."]
+one_shot = true
 autostart = true
 
 [connection signal="timeout" from="BulletShootSpeed" to="." method="_on_speed_timeout"]
 [connection signal="timeout" from="PointBlank" to="." method="_on_point_blank_timeout"]
 [connection signal="timeout" from="DonutTimer" to="." method="_on_donut_timer_timeout"]
+[connection signal="timeout" from="LineTimer" to="." method="_on_line_timer_timeout"]
