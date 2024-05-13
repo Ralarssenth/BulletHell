@@ -1,18 +1,18 @@
-[gd_scene load_steps=4 format=3 uid="uid://hqh15ic51d4t"]
+[gd_scene load_steps=4 format=3 uid="uid://bf0ceon2od7sf"]
 
-[ext_resource type="Script" path="res://scripts/Bullet.gd" id="1_18qvt"]
-[ext_resource type="Texture2D" uid="uid://dbowgo75yo6s1" path="res://assets/pointBlank.png" id="2_rba37"]
+[ext_resource type="Script" path="res://scripts/Bullet.gd" id="1_1vejm"]
+[ext_resource type="Texture2D" uid="uid://dbowgo75yo6s1" path="res://assets/pointBlank.png" id="2_7cl03"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_cf1hj"]
 radius = 30.104
 
-[node name="Bullet" type="Area2D" groups=["enemy_bullet", "enemy_hitbox"]]
-script = ExtResource("1_18qvt")
+[node name="Bullet" type="Area2D" groups=["player_bullet", "player_hitbox"]]
+script = ExtResource("1_1vejm")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-modulate = Color(1, 1, 1, 0.784314)
+modulate = Color(1, 1, 1, 0.588235)
 scale = Vector2(0.1, 0.1)
-texture = ExtResource("2_rba37")
+texture = ExtResource("2_7cl03")
 
 [node name="VisibleOnScreenEnabler2D" type="VisibleOnScreenEnabler2D" parent="."]
 position = Vector2(-9.53674e-07, -0.5)

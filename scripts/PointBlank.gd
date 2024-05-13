@@ -27,7 +27,7 @@ func init(_position, _radius=radius, _timer=timer, _linger=linger):
 
 func burst():
 	var tween = create_tween()
-	tween.tween_property($Sprite2D,"modulate:a", 1, timer).set_trans(Tween.TRANS_SINE)
+	tween.tween_property($Sprite2D,"modulate:a", 0.5, timer).set_trans(Tween.TRANS_SINE)
 	tween.tween_callback(_on_burst_finished)
 
 func _on_burst_finished():

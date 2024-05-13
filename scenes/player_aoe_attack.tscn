@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://c7j6jgqb5a703"]
+
+[ext_resource type="Texture2D" uid="uid://dbowgo75yo6s1" path="res://assets/pointBlank.png" id="1_kpa7v"]
+[ext_resource type="Script" path="res://scripts/PointBlank.gd" id="1_uh6i6"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ir3ec"]
+radius = 298.0
+
+[node name="Player_AOE_attack" type="Area2D" groups=["player_hitbox"]]
+script = ExtResource("1_uh6i6")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -1)
+shape = SubResource("CircleShape2D_ir3ec")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0)
+texture = ExtResource("1_kpa7v")
+
+[node name="LingeringTimer" type="Timer" parent="."]
+
+[connection signal="timeout" from="LingeringTimer" to="." method="_on_lingering_timer_timeout"]

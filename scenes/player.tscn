@@ -1,9 +1,11 @@
-[gd_scene load_steps=16 format=3 uid="uid://0upble6y4iu6"]
+[gd_scene load_steps=20 format=3 uid="uid://0upble6y4iu6"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_48mg1"]
 [ext_resource type="Texture2D" uid="uid://c8vt5dpwcaq34" path="res://assets/player/armBack.png" id="1_f12gu"]
 [ext_resource type="Texture2D" uid="uid://cmdfn3hbomrvn" path="res://assets/player/legBack.png" id="2_2jf7f"]
+[ext_resource type="PackedScene" uid="uid://c7j6jgqb5a703" path="res://scenes/player_aoe_attack.tscn" id="2_8qw23"]
 [ext_resource type="Texture2D" uid="uid://byuviv3mdr0pe" path="res://assets/player/torso.png" id="3_ubn8w"]
+[ext_resource type="PackedScene" uid="uid://bf0ceon2od7sf" path="res://scenes/player_bullet.tscn" id="3_wynmc"]
 [ext_resource type="Texture2D" uid="uid://7tuydk1vohe5" path="res://assets/player/head.png" id="4_8dcyw"]
 [ext_resource type="Texture2D" uid="uid://dn3vltlxxv0k2" path="res://assets/player/legFront.png" id="5_h6d54"]
 [ext_resource type="Texture2D" uid="uid://bt64yvgv4a1ke" path="res://assets/player/armFront.png" id="6_rqt5e"]
@@ -59,6 +61,18 @@ tracks/3/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Parts:modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
 }
 
 [sub_resource type="Animation" id="Animation_i41w3"]
@@ -225,11 +239,33 @@ _data = {
 "move_forward": SubResource("Animation_ox0hf")
 }
 
+[sub_resource type="Animation" id="Animation_7gqvs"]
+resource_name = "damaged"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Parts:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.3, 0.5, 0.7, 0.9, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 0, 0, 1), Color(1, 1, 1, 1), Color(1, 0, 0, 1), Color(1, 1, 1, 1), Color(1, 0, 0, 1), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_brprl"]
+_data = {
+"damaged": SubResource("Animation_7gqvs")
+}
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_vsph0"]
-radius = 31.0
+radius = 58.0086
 
 [node name="Player" type="Area2D"]
 script = ExtResource("1_48mg1")
+player_aoe_attack_node = ExtResource("2_8qw23")
+player_bullet_node = ExtResource("3_wynmc")
 
 [node name="Parts" type="Node2D" parent="."]
 
@@ -267,22 +303,33 @@ texture = ExtResource("6_rqt5e")
 centered = false
 offset = Vector2(-75, -75)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="MovementAnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
 "": SubResource("AnimationLibrary_ccwqn")
+}
+
+[node name="ColorAnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_brprl")
 }
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_vsph0")
 
 [node name="Normal" type="Sprite2D" parent="CollisionShape2D"]
-scale = Vector2(0.15, 0.15)
+modulate = Color(1, 1, 1, 0.784314)
+position = Vector2(1, 1)
+scale = Vector2(0.28, 0.28)
 texture = ExtResource("8_5o2e1")
 
 [node name="Tight" type="Sprite2D" parent="CollisionShape2D"]
 visible = false
-position = Vector2(-0.499998, -0.5)
-scale = Vector2(0.105, 0.105)
+modulate = Color(1, 1, 1, 0.784314)
+position = Vector2(-0.499998, 0.5)
+scale = Vector2(0.2, 0.2)
 texture = ExtResource("9_vqaj3")
+
+[node name="InvulnTimer" type="Timer" parent="."]
+one_shot = true
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
