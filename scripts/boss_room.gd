@@ -15,19 +15,36 @@ var next_target
 
 func _ready():
 	bosses = get_tree().get_nodes_in_group("boss")
+	connect_boss_signals()
+	
 	$Player.connect("changed_target", update_player_target)
+	
 	current_target = $Player.current_target
-	update_player_target($Player.current_target)
+	update_player_target(current_target)
+	
 	$HUD.update_boss_healthbar(current_target.current_health, current_target.max_health)
+
+
+func connect_boss_signals():
+	for boss in bosses:
+		boss.connect("tree_exited", _on_boss_tree_exited)
+
+func _on_boss_tree_exited():
+	var i = bosses.find(current_target)
+	bosses.remove_at(i)
+	$HUD.hide_boss_healthbar()
+	$Player.update_target()
+	
 
 
 func update_player_target(_target):
 	next_target = _target
 	
 	if next_target != $Player: #check for self targeting (no boss present)
-		if current_target != next_target: 
-			current_target.targeted(false)
-			print(str(current_target) + ": untargeted")
+		if current_target: #check if target is valid before changing sprite
+			if current_target != next_target:
+				current_target.targeted(false)
+				print(str(current_target) + ": untargeted")
 			next_target.targeted(true) 
 			current_target = next_target
 			print(str(current_target) + ": targeted")
@@ -122,10 +139,11 @@ func _on_line_timer_timeout():
 
 func _on_spin_timer_timeout():
 	var recast_timer = 9.0
-	spawn_spinning_x($Boss.position, 1.0, 8.0, 1)
+	if not bosses.is_empty():
+		spawn_spinning_x(bosses[0].position, 1.0, 8.0, 1)
 	
-	$PointBlank.set_wait_time(recast_timer)
-	$PointBlank.start()
+		$PointBlank.set_wait_time(recast_timer)
+		$PointBlank.start()
 	
 
 
