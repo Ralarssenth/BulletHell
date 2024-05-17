@@ -12,8 +12,9 @@ var current_move_state = MOVE_STATE.IDLE
 
 var bosses = []
 var current_boss_index:int = 0
-var current_target
+var current_target = self
 var boss_count:int
+signal changed_target(_target)
 
 var attack_1 = {"speed": 200.0, "GCD": 1.5}
 var attack_2 = {"size": 200.0, "timer": 0.5, "linger": 0.5, "GCD": 1.5}
@@ -42,12 +43,14 @@ func _input(event):
 		toggle_tight(true)
 	if event.is_action_released("shift"):
 		toggle_tight(false)
+		iterate_target()
 	if event.is_action_pressed("attack_1"):
 		attack1_shoot_bullet()
 	if event.is_action_pressed("attack_2"):
 		attack2_aoe_ranged()
 	if event.is_action_pressed("attack_3"):
 		attack3_aoe_self()
+
 
 # Get the input direction and handle the movement/deceleration.
 func move_and_animate(delta):
@@ -138,6 +141,7 @@ func update_target():
 		else:
 			current_target = bosses[current_boss_index]
 			boss_count = bosses.size()
+	
 
 
 # iterates through multiple targets, if any
@@ -146,6 +150,7 @@ func iterate_target():
 	if current_boss_index > (boss_count  - 1): #wrap back to 0
 		current_boss_index = 0
 	current_target = bosses[current_boss_index]
+	emit_signal("changed_target", current_target)
 
 
 # Gets the array of bosses and assigns target to the first entry. 

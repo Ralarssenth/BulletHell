@@ -9,6 +9,33 @@ var theta: float = 0.0
 @export var line_attack_node: PackedScene
 @export var spinning_ray_node: PackedScene
 
+var bosses = []
+var current_target
+var next_target
+
+func _ready():
+	bosses = get_tree().get_nodes_in_group("boss")
+	$Player.connect("changed_target", update_player_target)
+	update_player_target($Player.current_target)
+
+
+func update_player_target(_target):
+	next_target = _target
+	if next_target != $Player: #check for self targeting (no boss present)
+		if current_target != next_target: 
+			if current_target:#check if current target exists
+				current_target.targeted(false)
+				print(str(current_target) + ": untargeted")
+			next_target.targeted(true) 
+			current_target = next_target
+			print(str(current_target) + ": targeted")
+		else:
+			print("same target")
+	else:
+		print("Player targeted")
+
+
+
 func get_vector(angle):
 	theta = angle + alpha
 	return Vector2(cos(theta), sin(theta))
@@ -62,6 +89,8 @@ func spawn_spinning_plus(_position:Vector2, _timer:float, _linger:float, _counte
 	spawn_spinning_ray(_position, Globals.HORIZONTAL_E, _timer, _linger, _counter)
 	spawn_spinning_ray(_position, Globals.HORIZONTAL_W, _timer, _linger, _counter)
 
+
+# Everything below this point is the functional timeline of the room
 
 func _on_bullet_shoot_speed_timeout():
 	shoot($Boss.position, theta)

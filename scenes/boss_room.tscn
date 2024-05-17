@@ -19,11 +19,14 @@ line_attack_node = ExtResource("5_gmyj2")
 spinning_ray_node = ExtResource("6_juftc")
 
 [node name="Boss" parent="." instance=ExtResource("1_3tfcb")]
-position = Vector2(558, 299)
+position = Vector2(259, 289)
 scale = Vector2(1, 1)
 
+[node name="Boss2" parent="." instance=ExtResource("1_3tfcb")]
+position = Vector2(893, 293)
+
 [node name="Player" parent="." instance=ExtResource("2_hule2")]
-position = Vector2(191, 322)
+position = Vector2(569, 294)
 scale = Vector2(0.12, 0.12)
 
 [node name="HUD" parent="." instance=ExtResource("3_j1b6s")]

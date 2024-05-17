@@ -2,6 +2,7 @@ extends Node
 
 signal player_damaged
 signal player_died
+signal update_player_target
 
 const HORIZONTAL_E = 0.0
 const HORIZONTAL_W = PI

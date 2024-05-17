@@ -1,13 +1,14 @@
-[gd_scene load_steps=5 format=3 uid="uid://bahxyclakwvh0"]
+[gd_scene load_steps=6 format=3 uid="uid://bahxyclakwvh0"]
 
 [ext_resource type="Script" path="res://scripts/boss.gd" id="1_6ed73"]
 [ext_resource type="Texture2D" uid="uid://d2ahkke5dskye" path="res://assets/bosses/bossHitbox.png" id="1_rrjr4"]
-[ext_resource type="Texture2D" uid="uid://bf4n407w1eenh" path="res://assets/icon.svg" id="2_6h68a"]
+[ext_resource type="Texture2D" uid="uid://bf4n407w1eenh" path="res://assets/bosses/icon.svg" id="3_85ki2"]
+[ext_resource type="Texture2D" uid="uid://drbc2cymgoa0i" path="res://assets/bosses/targetCircle.png" id="4_5hdf8"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_7hjjc"]
 radius = 236.053
 
-[node name="Boss" type="Area2D"]
+[node name="Boss" type="Area2D" groups=["boss"]]
 script = ExtResource("1_6ed73")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -20,7 +21,13 @@ show_behind_parent = true
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("1_rrjr4")
 
-[node name="Sprite2D" type="Sprite2D" parent="." groups=["boss"]]
-texture = ExtResource("2_6h68a")
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("3_85ki2")
+
+[node name="TargetCircle" type="Sprite2D" parent="Sprite2D"]
+visible = false
+modulate = Color(1, 1, 1, 0.392157)
+texture = ExtResource("4_5hdf8")
+offset = Vector2(-8, -10)
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
