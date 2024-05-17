@@ -4,6 +4,7 @@ extends Area2D
 @export var player_bullet_node: PackedScene
 
 const BASE_SPEED = 300.0
+var current_speed = 300.0
 var speed = 300.0
 var velocity = Vector2.ZERO
 
@@ -19,6 +20,7 @@ signal changed_target(_target)
 var attack_1 = {"speed": 200.0, "GCD": 1.5}
 var attack_2 = {"size": 200.0, "timer": 0.5, "linger": 0.5, "GCD": 1.5}
 var attack_3 = {"size": 300.0, "timer": 0.5, "linger": 0.5, "GCD": 1.5}
+var defensive_stats = {"duration": 2.0, "speed_multiplier": 2.0, "cooldown": 15.0}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -50,6 +52,8 @@ func _input(event):
 		attack2_aoe_ranged()
 	if event.is_action_pressed("attack_3"):
 		attack3_aoe_self()
+	if event.is_action_pressed("defensive"):
+		defensive()
 
 
 # Get the input direction and handle the movement/deceleration.
@@ -93,9 +97,9 @@ func toggle_tight(on):
 		$CollisionShape2D/Normal.set_visible(not on)
 		$CollisionShape2D/Tight.set_visible(on)
 		if on:
-			speed = BASE_SPEED / 2
+			speed = current_speed / 2
 		else:
-			speed = BASE_SPEED
+			speed = current_speed
 
 
 func _on_area_entered(area):
@@ -116,9 +120,10 @@ func damaged():
 
 
 func invuln(duration:float, animation:String):
-	$InvulnTimer.set_wait_time(duration)
-	$InvulnTimer.start()
-	$ColorAnimationPlayer.play(animation)
+	if $InvulnTimer.is_stopped():
+		$InvulnTimer.set_wait_time(duration)
+		$InvulnTimer.start()
+		$ColorAnimationPlayer.play(animation)
 
 
 func _on_player_died():
@@ -212,4 +217,21 @@ func attack3_aoe_self():
 		
 		$GCDTimer.set_wait_time(attack_3["GCD"])
 		$GCDTimer.start()
+	
+func defensive():
+	if $DefensiveCDTimer.is_stopped():
+		speed = BASE_SPEED * defensive_stats["speed_multiplier"]
+		current_speed = speed
+		$DefensiveCDTimer.set_wait_time(defensive_stats["cooldown"])
+		$DefensiveCDTimer.start()
+		invuln(defensive_stats["duration"], "defensive")
+		
+		
+	
+
+
+func _on_invuln_timer_timeout():
+	$ColorAnimationPlayer.stop()
+	speed = BASE_SPEED
+	current_speed = BASE_SPEED
 	

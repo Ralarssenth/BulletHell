@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://0upble6y4iu6"]
+[gd_scene load_steps=22 format=3 uid="uid://0upble6y4iu6"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_48mg1"]
 [ext_resource type="Texture2D" uid="uid://c8vt5dpwcaq34" path="res://assets/player/armBack.png" id="1_f12gu"]
@@ -241,6 +241,8 @@ _data = {
 
 [sub_resource type="Animation" id="Animation_7gqvs"]
 resource_name = "damaged"
+length = 0.4
+loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -248,15 +250,49 @@ tracks/0/path = NodePath("Parts:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.3, 0.5, 0.7, 0.9, 1),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.2, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Color(1, 1, 1, 1), Color(1, 0, 0, 1), Color(1, 1, 1, 1), Color(1, 0, 0, 1), Color(1, 1, 1, 1), Color(1, 0, 0, 1), Color(1, 1, 1, 1)]
+"values": [Color(1, 1, 1, 1), Color(1, 0, 0, 1), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_67wpu"]
+resource_name = "defensive"
+length = 0.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Parts:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(0, 1, 0, 1), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_47cv1"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Parts:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_brprl"]
 _data = {
-"damaged": SubResource("Animation_7gqvs")
+"RESET": SubResource("Animation_47cv1"),
+"damaged": SubResource("Animation_7gqvs"),
+"defensive": SubResource("Animation_67wpu")
 }
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_vsph0"]
@@ -336,4 +372,8 @@ one_shot = true
 wait_time = 1.5
 one_shot = true
 
+[node name="DefensiveCDTimer" type="Timer" parent="."]
+one_shot = true
+
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="timeout" from="InvulnTimer" to="." method="_on_invuln_timer_timeout"]
