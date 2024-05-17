@@ -14,13 +14,12 @@ var current_move_state = MOVE_STATE.IDLE
 var bosses = []
 var current_boss_index:int = 0
 var current_target = self
-var boss_count:int
 signal changed_target(_target)
 
-var attack_1 = {"speed": 200.0, "GCD": 1.5}
-var attack_2 = {"size": 200.0, "timer": 0.5, "linger": 0.5, "GCD": 1.5}
-var attack_3 = {"size": 300.0, "timer": 0.5, "linger": 0.5, "GCD": 1.5}
-var defensive_stats = {"duration": 2.0, "speed_multiplier": 2.0, "cooldown": 15.0}
+var attack_1 = {"speed": 200.0, "GCD": 1.5, "damage": 1.0}
+var attack_2 = {"size": 200.0, "timer": 0.5, "linger": 0.5, "GCD": 1.5, "damage": 1.0}
+var attack_3 = {"size": 300.0, "timer": 0.5, "linger": 0.5, "GCD": 1.5, "damage": 1.0}
+var defensive_stats = {"duration": 2.0, "speed_multiplier": 2.0, "cooldown": 10.0}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -32,7 +31,6 @@ func _ready():
 		current_target = self
 	else:
 		current_target = bosses[current_boss_index]
-		boss_count = bosses.size()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -139,23 +137,22 @@ func update_target():
 		else:
 			current_boss_index = 0
 			current_target = bosses[current_boss_index]
-			boss_count = bosses.size()
 	else:
 		if bosses.is_empty():
 			current_target = self
 		else:
 			current_target = bosses[current_boss_index]
-			boss_count = bosses.size()
 	
 
 
 # iterates through multiple targets, if any
 func iterate_target():
-	current_boss_index += 1
-	if current_boss_index > (boss_count  - 1): #wrap back to 0
-		current_boss_index = 0
-	current_target = bosses[current_boss_index]
-	emit_signal("changed_target", current_target)
+	if not bosses.is_empty():
+		current_boss_index += 1
+		if current_boss_index > (bosses.size()  - 1): #wrap back to 0
+			current_boss_index = 0
+		current_target = bosses[current_boss_index]
+		emit_signal("changed_target", current_target)
 
 
 # Gets the array of bosses and assigns target to the first entry. 
@@ -169,12 +166,12 @@ func get_target_position():
 	return target_position
 
 # Helper function for spawning circle attacks
-func spawn_aoe_attack(_position:Vector2, _size:float, _timer:float, _linger:float):
-	var aoe_attack = player_aoe_attack_node.instantiate()
+func spawn_aoe_attack(_position:Vector2, _size:float, _timer:float, _linger:float, _damage:float):
+	var player_aoe_attack = player_aoe_attack_node.instantiate()
 	
-	aoe_attack.init(_position, _size, _timer, _linger)
+	player_aoe_attack.init(_position, _size, _timer, _linger, _damage)
 	
-	get_tree().current_scene.call_deferred("add_child", aoe_attack)
+	get_tree().current_scene.call_deferred("add_child", player_aoe_attack)
 
 
 # An attack that shoots a bullet at the target's position
@@ -191,6 +188,7 @@ func attack1_shoot_bullet():
 		player_bullet.position = position
 		player_bullet.direction = angle
 		player_bullet.speed = attack_1["speed"]
+		player_bullet.damage_amount = attack_1["damage"]
 		
 		get_tree().current_scene.call_deferred("add_child", player_bullet)
 		
@@ -203,7 +201,13 @@ func attack2_aoe_ranged():
 	if $GCDTimer.is_stopped():
 		var target_position = get_target_position()
 		
-		spawn_aoe_attack(target_position, attack_2["size"], attack_2["timer"], attack_2["linger"])
+		spawn_aoe_attack(
+			target_position, 
+			attack_2["size"], 
+			attack_2["timer"], 
+			attack_2["linger"], 
+			attack_2["damage"]
+		)
 		
 		$GCDTimer.set_wait_time(attack_2["GCD"])
 		$GCDTimer.start()
@@ -213,7 +217,13 @@ func attack3_aoe_self():
 	if $GCDTimer.is_stopped():
 		var target_position = self.get_global_position()
 		
-		spawn_aoe_attack(target_position, attack_3["size"], attack_3["timer"], attack_3["linger"])
+		spawn_aoe_attack(
+			target_position, 
+			attack_3["size"], 
+			attack_3["timer"], 
+			attack_3["linger"], 
+			attack_3["damage"]
+		)
 		
 		$GCDTimer.set_wait_time(attack_3["GCD"])
 		$GCDTimer.start()
@@ -225,9 +235,6 @@ func defensive():
 		$DefensiveCDTimer.set_wait_time(defensive_stats["cooldown"])
 		$DefensiveCDTimer.start()
 		invuln(defensive_stats["duration"], "defensive")
-		
-		
-	
 
 
 func _on_invuln_timer_timeout():

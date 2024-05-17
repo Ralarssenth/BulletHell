@@ -3,6 +3,7 @@ extends Area2D
 var radius = 100
 var timer:float = 3.0
 var linger:float = 0.5
+var damage_amount = 1.0
 
 func _ready():
 	burst()
@@ -10,11 +11,12 @@ func _ready():
 	
 
 
-func init(_position, _radius=radius, _timer=timer, _linger=linger):
+func init(_position, _radius=radius, _timer=timer, _linger=linger, _damage = damage_amount):
 	position = _position
 	radius = _radius
 	timer = _timer
 	linger = _linger
+	damage_amount = _damage
 	
 	# Set the unique collision shape
 	$CollisionShape2D.shape = $CollisionShape2D.shape.duplicate() # Make this shape unique

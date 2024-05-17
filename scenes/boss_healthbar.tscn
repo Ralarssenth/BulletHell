@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://c8hpjvxex4fhm"]
+
+[ext_resource type="Script" path="res://scripts/BossHealthBar.gd" id="1_b26jr"]
+
+[node name="BossHealthBar" type="Node2D"]
+script = ExtResource("1_b26jr")
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+offset_right = 1152.0
+offset_bottom = 27.0
+max_value = 1000.0
+value = 25.0
+fill_mode = 1

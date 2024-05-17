@@ -1,9 +1,15 @@
-[gd_scene load_steps=2 format=3 uid="uid://du41pc5lmlpv"]
+[gd_scene load_steps=3 format=3 uid="uid://du41pc5lmlpv"]
 
 [ext_resource type="PackedScene" uid="uid://o2yvdjpq7bl" path="res://scenes/healthbar.tscn" id="1_l6iip"]
+[ext_resource type="Script" path="res://scripts/hud.gd" id="1_mcw2y"]
 
 [node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_mcw2y")
 
 [node name="Healthbar" parent="." instance=ExtResource("1_l6iip")]
 position = Vector2(0, 390)
 scale = Vector2(0.4, 0.4)
+
+[node name="BossProgressBar" type="ProgressBar" parent="."]
+offset_right = 1152.0
+offset_bottom = 27.0

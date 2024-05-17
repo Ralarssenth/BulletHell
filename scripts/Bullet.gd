@@ -3,6 +3,7 @@ extends Area2D
 
 var speed:float = 100.0
 var direction = Vector2.RIGHT
+var damage_amount = 1.0
 
 func _physics_process(delta):
 	position += direction * speed * delta

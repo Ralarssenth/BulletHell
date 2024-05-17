@@ -16,19 +16,22 @@ var next_target
 func _ready():
 	bosses = get_tree().get_nodes_in_group("boss")
 	$Player.connect("changed_target", update_player_target)
+	current_target = $Player.current_target
 	update_player_target($Player.current_target)
+	$HUD.update_boss_healthbar(current_target.current_health, current_target.max_health)
 
 
 func update_player_target(_target):
 	next_target = _target
+	
 	if next_target != $Player: #check for self targeting (no boss present)
 		if current_target != next_target: 
-			if current_target:#check if current target exists
-				current_target.targeted(false)
-				print(str(current_target) + ": untargeted")
+			current_target.targeted(false)
+			print(str(current_target) + ": untargeted")
 			next_target.targeted(true) 
 			current_target = next_target
 			print(str(current_target) + ": targeted")
+			$HUD.update_boss_healthbar(current_target.current_health, current_target.max_health)
 		else:
 			print("same target")
 	else:
