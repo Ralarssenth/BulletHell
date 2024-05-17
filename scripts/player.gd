@@ -10,13 +10,26 @@ var velocity = Vector2.ZERO
 enum MOVE_STATE {IDLE, FORWARD, BACKWARD}
 var current_move_state = MOVE_STATE.IDLE
 
-var attack_1 = {"target": "boss"}
-var attack_2 = {"target": "boss", "size": 200.0, "timer": 0.5, "linger": 0.5}
-var attack_3 = {"target": self, "size": 300.0, "timer": 0.5, "linger": 0.5}
+var bosses = []
+var current_boss_index:int = 0
+var current_target
+var boss_count:int
+
+var attack_1 = {"speed": 200.0, "GCD": 1.5}
+var attack_2 = {"size": 200.0, "timer": 0.5, "linger": 0.5, "GCD": 1.5}
+var attack_3 = {"size": 300.0, "timer": 0.5, "linger": 0.5, "GCD": 1.5}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	Globals.player_died.connect(_on_player_died)
+	
+	#set the initial target
+	bosses = get_tree().get_nodes_in_group("boss")
+	if bosses.is_empty():
+		current_target = self
+	else:
+		current_target = bosses[current_boss_index]
+		boss_count = bosses.size()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -30,11 +43,11 @@ func _input(event):
 	if event.is_action_released("shift"):
 		toggle_tight(false)
 	if event.is_action_pressed("attack_1"):
-		attack_shoot_bullet()
+		attack1_shoot_bullet()
 	if event.is_action_pressed("attack_2"):
-		attack_aoe_ranged()
+		attack2_aoe_ranged()
 	if event.is_action_pressed("attack_3"):
-		attack_aoe_self()
+		attack3_aoe_self()
 
 # Get the input direction and handle the movement/deceleration.
 func move_and_animate(delta):
@@ -109,6 +122,43 @@ func _on_player_died():
 	queue_free()
 
 
+#Checks for new bosses and updates the target
+func update_target():
+	bosses = get_tree().get_nodes_in_group("boss")
+	if current_target == self:
+		if bosses.is_empty():
+			current_target = self
+		else:
+			current_boss_index = 0
+			current_target = bosses[current_boss_index]
+			boss_count = bosses.size()
+	else:
+		if bosses.is_empty():
+			current_target = self
+		else:
+			current_target = bosses[current_boss_index]
+			boss_count = bosses.size()
+
+
+# iterates through multiple targets, if any
+func iterate_target():
+	current_boss_index += 1
+	if current_boss_index > (boss_count  - 1): #wrap back to 0
+		current_boss_index = 0
+	current_target = bosses[current_boss_index]
+
+
+# Gets the array of bosses and assigns target to the first entry. 
+func get_target_position():
+	var target_position
+	if current_target: #check that target is still valid
+		target_position = current_target.get_global_position()
+	else:
+		update_target()
+		target_position = current_target.get_global_position()
+	return target_position
+
+# Helper function for spawning circle attacks
 func spawn_aoe_attack(_position:Vector2, _size:float, _timer:float, _linger:float):
 	var aoe_attack = player_aoe_attack_node.instantiate()
 	
@@ -116,26 +166,45 @@ func spawn_aoe_attack(_position:Vector2, _size:float, _timer:float, _linger:floa
 	
 	get_tree().current_scene.call_deferred("add_child", aoe_attack)
 
-func attack_shoot_bullet():
-	var boss = get_tree().get_nodes_in_group(attack_2["target"])
-	var target_position = boss[0].get_global_position()
-	var start_position:Vector2 = self.get_global_position()
-	var angle = start_position.direction_to(target_position)
-	
-	var bullet = player_bullet_node.instantiate()
-	
-	bullet.position = position
-	bullet.direction = angle
-	
-	get_tree().current_scene.call_deferred("add_child", bullet)
 
-func attack_aoe_ranged():
-	var boss = get_tree().get_nodes_in_group(attack_2["target"])
-	var target_position = boss[0].get_global_position()
-	
-	spawn_aoe_attack(target_position, attack_2["size"], attack_2["timer"], attack_2["linger"])
+# An attack that shoots a bullet at the target's position
+func attack1_shoot_bullet():
+	if $GCDTimer.is_stopped():
+		var target_position = get_target_position()
+		if current_target == self:
+			target_position += Vector2(100.0, 0.0)
+		var start_position:Vector2 = self.get_global_position()
+		var angle = start_position.direction_to(target_position)
+		
+		var player_bullet = player_bullet_node.instantiate()
+		
+		player_bullet.position = position
+		player_bullet.direction = angle
+		player_bullet.speed = attack_1["speed"]
+		
+		get_tree().current_scene.call_deferred("add_child", player_bullet)
+		
+		$GCDTimer.set_wait_time(attack_1["GCD"])
+		$GCDTimer.start()
 
-func attack_aoe_self():
-	spawn_aoe_attack(attack_3["target"].position, attack_3["size"], attack_3["timer"], attack_3["linger"])
-	
+
+# A circle attack that spawns on the target's position from range
+func attack2_aoe_ranged():
+	if $GCDTimer.is_stopped():
+		var target_position = get_target_position()
+		
+		spawn_aoe_attack(target_position, attack_2["size"], attack_2["timer"], attack_2["linger"])
+		
+		$GCDTimer.set_wait_time(attack_2["GCD"])
+		$GCDTimer.start()
+
+# A circle attack that spawns on the player's position
+func attack3_aoe_self():
+	if $GCDTimer.is_stopped():
+		var target_position = self.get_global_position()
+		
+		spawn_aoe_attack(target_position, attack_3["size"], attack_3["timer"], attack_3["linger"])
+		
+		$GCDTimer.set_wait_time(attack_3["GCD"])
+		$GCDTimer.start()
 	

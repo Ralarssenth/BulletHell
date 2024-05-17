@@ -332,4 +332,8 @@ texture = ExtResource("9_vqaj3")
 [node name="InvulnTimer" type="Timer" parent="."]
 one_shot = true
 
+[node name="GCDTimer" type="Timer" parent="."]
+wait_time = 1.5
+one_shot = true
+
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
