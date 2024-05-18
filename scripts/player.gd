@@ -118,7 +118,7 @@ func damaged():
 
 
 func invuln(duration:float, animation:String):
-	if $InvulnTimer.is_stopped():
+	if $InvulnTimer.is_stopped() or animation == "defensive":
 		$InvulnTimer.set_wait_time(duration)
 		$InvulnTimer.start()
 		$ColorAnimationPlayer.play(animation)
