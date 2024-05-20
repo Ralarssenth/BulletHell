@@ -20,7 +20,6 @@ spinning_ray_node = ExtResource("6_juftc")
 
 [node name="Boss" parent="." instance=ExtResource("1_3tfcb")]
 position = Vector2(259, 289)
-scale = Vector2(1, 1)
 
 [node name="Boss2" parent="." instance=ExtResource("1_3tfcb")]
 position = Vector2(893, 293)

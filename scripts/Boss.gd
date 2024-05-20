@@ -5,7 +5,8 @@ var current_health = 100.0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass
+	$CollisionShape2D/TextureProgressBar.max_value = max_health
+	$CollisionShape2D/TextureProgressBar.value = current_health
 
 
 func _on_area_entered(area):
@@ -18,6 +19,7 @@ func _on_area_entered(area):
 func damaged(_amount):
 	print("boss damaged")
 	current_health -= _amount
+	$CollisionShape2D/TextureProgressBar.value = current_health
 	Globals.emit_signal("boss_damaged", current_health, max_health)
 	
 	if current_health <= 0:
