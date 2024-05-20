@@ -23,3 +23,7 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	pass
+
+# This is a stub for the ready area scene
+func change_scene():
+	print("all players ready, scene changing...")

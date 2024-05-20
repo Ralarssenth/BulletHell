@@ -23,7 +23,8 @@ func damaged(_amount):
 	Globals.emit_signal("boss_damaged", current_health, max_health)
 	
 	if current_health <= 0:
-		queue_free()
+		current_health = max_health
+		$CollisionShape2D/TextureProgressBar.value = current_health
 
 
 func targeted(on):

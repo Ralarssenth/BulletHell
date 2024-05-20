@@ -1,0 +1,75 @@
+[gd_scene load_steps=9 format=3 uid="uid://cgtroki4uub7i"]
+
+[ext_resource type="Script" path="res://scripts/dummy.gd" id="1_jfxju"]
+[ext_resource type="Texture2D" uid="uid://d2ahkke5dskye" path="res://assets/bosses/bossHitbox.png" id="2_ssmbc"]
+[ext_resource type="Texture2D" uid="uid://bqlna4py45yw1" path="res://assets/bosses/bossHitboxHealth.png" id="3_h77iy"]
+[ext_resource type="Texture2D" uid="uid://bf4n407w1eenh" path="res://assets/bosses/icon.svg" id="4_a0uba"]
+[ext_resource type="Texture2D" uid="uid://drbc2cymgoa0i" path="res://assets/bosses/targetCircle.png" id="5_3hhqy"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_7hjjc"]
+radius = 236.053
+
+[sub_resource type="Animation" id="Animation_4n10d"]
+resource_name = "targeted"
+length = 8.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("BossSprite2D/TargetCircle:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2, 4, 6, 8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 1.5708, 3.14159, 4.71239, 6.28319]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ieqmn"]
+_data = {
+"targeted": SubResource("Animation_4n10d")
+}
+
+[node name="Dummy" type="Area2D" groups=["boss"]]
+script = ExtResource("1_jfxju")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-1, 0)
+shape = SubResource("CircleShape2D_7hjjc")
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="CollisionShape2D"]
+modulate = Color(1, 1, 1, 0.392157)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -240.0
+offset_top = -240.0
+offset_right = 360.0
+offset_bottom = 360.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.8, 0.8)
+value = 25.0
+fill_mode = 4
+texture_under = ExtResource("2_ssmbc")
+texture_progress = ExtResource("3_h77iy")
+
+[node name="BossSprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("4_a0uba")
+
+[node name="TargetCircle" type="Sprite2D" parent="BossSprite2D"]
+visible = false
+modulate = Color(1, 1, 1, 0.392157)
+rotation = 0.314159
+texture = ExtResource("5_3hhqy")
+offset = Vector2(-8, -10)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_ieqmn")
+}
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
