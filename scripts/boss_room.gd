@@ -9,15 +9,21 @@ var theta: float = 0.0
 @export var line_attack_node: PackedScene
 @export var spinning_ray_node: PackedScene
 
-var bosses = []
+
 var current_target
 var next_target
 
 func _ready():
-	bosses = get_tree().get_nodes_in_group("boss")
+	Globals.current_room = "boss_room"
+	
+	Globals.bosses = get_tree().get_nodes_in_group("boss")
+	print("size of boss array now: " + str(Globals.bosses.size()))
 	connect_boss_signals()
 	
 	$Player.connect("changed_target", update_player_target)
+	
+	$Player.current_boss_index = 0
+	$Player.current_target = Globals.bosses[$Player.current_boss_index]
 	
 	current_target = $Player.current_target
 	update_player_target(current_target)
@@ -26,38 +32,46 @@ func _ready():
 
 
 func connect_boss_signals():
-	for boss in bosses:
-		boss.connect("tree_exited", _on_boss_tree_exited)
+	for boss in Globals.bosses:
+		boss.connect("tree_exiting", _on_boss_tree_exiting.bind(boss))
 
 # Updates the player target to new valid target when a boss despawns on kill
-func _on_boss_tree_exited():
-	var i = bosses.find(current_target)
-	bosses.remove_at(i)
+func _on_boss_tree_exiting(_boss):
 	$HUD.hide_boss_healthbar()
-	$Player.update_target()
 	
+	Globals.bosses.erase(_boss)
+	print("size of boss array now: " + str(Globals.bosses.size()))
+	
+	if Globals.bosses.is_empty():
+		$ReadyArea.activate()
+		print("last boss removed")
+		
+	$Player.iterate_target()
+	
+
 
 
 func update_player_target(_target):
 	next_target = _target
-	
 	if next_target != $Player: #check for self targeting (no boss present)
-		next_target.targeted(true) #always target the new target
+		if is_instance_valid(next_target):#check to be sure next target is still valid (in cases of multikills)
+			next_target.targeted(true) #always target the new target
+			$HUD.update_boss_healthbar(next_target.current_health, next_target.max_health)
+		
 		if current_target != next_target:#only change if target is different
-			if current_target: #check if current target exists before changing sprite
+			if is_instance_valid(current_target): #check if current target exists before changing sprite
 				current_target.targeted(false)
 				print(str(current_target) + ": untargeted")
 				
 			current_target = next_target #set new current target
 			print(str(current_target) + ": targeted")
-			$HUD.update_boss_healthbar(current_target.current_health, current_target.max_health)
 			
 		else:
 			print("same target")
 	else:
 		print("Player targeted")
 
-# Everything in this section is about spawning various attacks
+# Everything in this next section is about spawning various attack types
 
 func get_vector(angle):
 	theta = angle + alpha
@@ -142,8 +156,8 @@ func _on_line_timer_timeout():
 
 func _on_spin_timer_timeout():
 	var recast_timer = 9.0
-	if not bosses.is_empty():
-		spawn_spinning_x(bosses[0].position, 1.0, 8.0, 1)
+	if not Globals.bosses.is_empty():
+		spawn_spinning_x(Globals.bosses[0].position, 1.0, 8.0, 1)
 	
 		$PointBlank.set_wait_time(recast_timer)
 		$PointBlank.start()

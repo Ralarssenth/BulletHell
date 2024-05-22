@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://drpxcubm5tfa"]
+[gd_scene load_steps=11 format=3 uid="uid://drpxcubm5tfa"]
 
 [ext_resource type="PackedScene" uid="uid://bahxyclakwvh0" path="res://scenes/boss.tscn" id="1_3tfcb"]
 [ext_resource type="Script" path="res://scripts/boss_room.gd" id="1_o5rja"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://d6v3jyvlpbc5" path="res://scenes/donut.tscn" id="4_qwkpk"]
 [ext_resource type="PackedScene" uid="uid://u4wmya6ayiw0" path="res://scenes/line_attack.tscn" id="5_gmyj2"]
 [ext_resource type="PackedScene" uid="uid://r703tw6n3tou" path="res://scenes/spinning_ray.tscn" id="6_juftc"]
+[ext_resource type="PackedScene" uid="uid://2kd7j8nf0edk" path="res://scenes/ready_area.tscn" id="10_ok1dg"]
 
 [node name="BossRoom" type="Node2D"]
 script = ExtResource("1_o5rja")
@@ -18,15 +19,15 @@ donut_node = ExtResource("4_qwkpk")
 line_attack_node = ExtResource("5_gmyj2")
 spinning_ray_node = ExtResource("6_juftc")
 
+[node name="Player" parent="." instance=ExtResource("2_hule2")]
+position = Vector2(569, 294)
+scale = Vector2(0.12, 0.12)
+
 [node name="Boss" parent="." instance=ExtResource("1_3tfcb")]
 position = Vector2(259, 289)
 
 [node name="Boss2" parent="." instance=ExtResource("1_3tfcb")]
 position = Vector2(893, 293)
-
-[node name="Player" parent="." instance=ExtResource("2_hule2")]
-position = Vector2(569, 294)
-scale = Vector2(0.12, 0.12)
 
 [node name="HUD" parent="." instance=ExtResource("3_j1b6s")]
 
@@ -40,10 +41,13 @@ one_shot = true
 
 [node name="LineTimer" type="Timer" parent="."]
 one_shot = true
-autostart = true
 
 [node name="SpinTimer" type="Timer" parent="."]
 one_shot = true
+
+[node name="ReadyArea" parent="." instance=ExtResource("10_ok1dg")]
+visible = false
+position = Vector2(1099, 324)
 
 [connection signal="timeout" from="BulletShootSpeed" to="." method="_on_bullet_shoot_speed_timeout"]
 [connection signal="timeout" from="PointBlank" to="." method="_on_point_blank_timeout"]

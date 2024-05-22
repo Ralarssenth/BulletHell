@@ -34,3 +34,7 @@ func _on_timer_timeout():
 		$Timer.start(1.0)
 	else:
 		Globals.change_scene()
+
+func activate():
+	set_visible(true)
+	$CollisionShape2D.set_deferred("disabled", false)

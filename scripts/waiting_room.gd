@@ -5,9 +5,18 @@ var next_target
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	Globals.current_room = "waiting_room"
+	
 	$Player.connect("changed_target", update_player_target)
+	
+	Globals.bosses = get_tree().get_nodes_in_group("boss")
+	
+	$Player.current_boss_index = 0
+	$Player.current_target = Globals.bosses[$Player.current_boss_index]
+	
 	current_target = $Player.current_target
 	update_player_target(current_target)
+	
 	$HUD.update_boss_healthbar(current_target.current_health, current_target.max_health)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
