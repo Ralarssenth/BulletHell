@@ -93,6 +93,7 @@ func spawn_pointBlank(_position:Vector2, _size:float, _timer:float, _linger:floa
 	get_tree().current_scene.call_deferred("add_child", pointBlank)
 	#print("pointBlank added to scene with params size: " + str(_size) + " and timer: " + str(_timer))
 
+
 func spawn_donut(_position:Vector2, _size:float, _density:int, _timer:float):
 	var donut = donut_node.instantiate()
 	
