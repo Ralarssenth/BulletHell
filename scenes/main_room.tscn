@@ -15,7 +15,7 @@ boss_room = ExtResource("3_x45ti")
 [node name="HUD" parent="." instance=ExtResource("2_efmdk")]
 
 [node name="Player" parent="." instance=ExtResource("3_gmdo7")]
-position = Vector2(357, 292)
+position = Vector2(125, 330)
 scale = Vector2(0.15, 0.15)
 
 [node name="ReadyArea" parent="." instance=ExtResource("4_6i3rr")]

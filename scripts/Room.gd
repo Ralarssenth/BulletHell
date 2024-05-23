@@ -108,10 +108,28 @@ func _on_boss_tree_exiting(_boss):
 # This is a stub for the ready area scene
 func change_scene():
 	print("all players ready, scene changing...")
-	# Free the old room
+	# Deactivate the ready area
+	$ReadyArea.activate(false)
+	
+	var transition_timer = 3.0
+	
+	# Free the old room and all attacks
 	var _room = get_tree().get_nodes_in_group("room")
 	for r in _room:
 		r.queue_free()
+		
+	var player_attacks = get_tree().get_nodes_in_group("player_hitbox")
+	for attack in player_attacks:
+		attack.queue_free()
+		
+	var enemy_attacks = get_tree().get_nodes_in_group("enemy_hitbox")
+	for attack in enemy_attacks:
+		attack.queue_free()
+	
+	
+	# Tween the player's position back to the left side
+	var tween = create_tween()
+	tween.tween_property($Player,"position:x", 125.0, transition_timer).set_trans(Tween.TRANS_SINE)
 	
 	# Spawn the next room
 	var next_room_instance
@@ -122,6 +140,7 @@ func change_scene():
 			next_room_instance = boss_room.instantiate()
 		_:
 			print("change_scene defaulted")
+	await get_tree().create_timer(transition_timer + 1.0).timeout
 	get_tree().current_scene.call_deferred("add_child", next_room_instance)
 	
 
@@ -137,8 +156,3 @@ func update_room(_room):
 	# Update the player target with the new bosses
 	update_player_target()
 	
-	match current_room:
-		"boss_room":
-			$ReadyArea.activate(false)
-		_:
-			print("update_room defaulted")
