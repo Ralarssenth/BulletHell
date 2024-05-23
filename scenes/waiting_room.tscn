@@ -1,23 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://223d0k7qrcav"]
+[gd_scene load_steps=3 format=3 uid="uid://223d0k7qrcav"]
 
-[ext_resource type="PackedScene" uid="uid://du41pc5lmlpv" path="res://scenes/hud.tscn" id="1_cwhpy"]
 [ext_resource type="Script" path="res://scripts/waiting_room.gd" id="1_hklue"]
 [ext_resource type="PackedScene" uid="uid://cgtroki4uub7i" path="res://scenes/dummy.tscn" id="2_vhewl"]
-[ext_resource type="PackedScene" uid="uid://0upble6y4iu6" path="res://scenes/player.tscn" id="3_nupsj"]
-[ext_resource type="PackedScene" uid="uid://2kd7j8nf0edk" path="res://scenes/ready_area.tscn" id="5_ickol"]
 
-[node name="WaitingRoom" type="Node2D"]
+[node name="WaitingRoom" type="Node2D" groups=["room"]]
 script = ExtResource("1_hklue")
-
-[node name="HUD" parent="." instance=ExtResource("1_cwhpy")]
 
 [node name="Dummy" parent="." instance=ExtResource("2_vhewl")]
 position = Vector2(566, 333)
 scale = Vector2(0.6, 0.6)
-
-[node name="Player" parent="." instance=ExtResource("3_nupsj")]
-position = Vector2(235, 348)
-scale = Vector2(0.12, 0.12)
-
-[node name="ReadyArea" parent="." instance=ExtResource("5_ickol")]
-position = Vector2(1100, 324)

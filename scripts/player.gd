@@ -11,9 +11,10 @@ var velocity = Vector2.ZERO
 enum MOVE_STATE {IDLE, FORWARD, BACKWARD}
 var current_move_state = MOVE_STATE.IDLE
 
-var current_boss_index:int = 0
+
 var current_target = self
-signal changed_target(_target)
+signal iterate_target
+signal update_target
 
 var attack_1 = {"speed": 200.0, "GCD": 1.5, "damage": 15.0}
 var attack_2 = {"size": 200.0, "timer": 0.5, "linger": 0.5, "GCD": 1.5, "damage": 3.0}
@@ -25,10 +26,7 @@ func _ready():
 	Globals.player_died.connect(_on_player_died)
 	
 	#set the initial target
-	if Globals.bosses.is_empty():
-		current_target = self
-	else:
-		current_target = Globals.bosses[current_boss_index]
+	current_target = self
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -41,7 +39,7 @@ func _input(event):
 		toggle_tight(true)
 	if event.is_action_released("shift"):
 		toggle_tight(false)
-		iterate_target()
+		emit_signal("iterate_target")
 	if event.is_action_pressed("attack_1"):
 		attack1_shoot_bullet()
 	if event.is_action_pressed("attack_2"):
@@ -126,42 +124,13 @@ func _on_player_died():
 	queue_free()
 
 
-#Checks for new bosses and updates the target
-func update_target():
-	if current_target == self:
-		if Globals.bosses.is_empty():
-			current_target = self
-		else:
-			current_boss_index = 0
-			current_target = Globals.bosses[current_boss_index]
-	else:
-		if Globals.bosses.is_empty():
-			current_target = self
-		else:
-			current_target = Globals.bosses[current_boss_index]
-	emit_signal("changed_target", current_target)
-
-
-# iterates through multiple targets, if any
-func iterate_target():
-	if not Globals.bosses.is_empty():
-		current_boss_index += 1
-		if current_boss_index > (Globals.bosses.size()  - 1): #wrap back to 0
-			current_boss_index = 0
-		current_target = Globals.bosses[current_boss_index]
-	else:
-		current_target = self
-		
-	emit_signal("changed_target", current_target)
-
-
 # Gets the array of bosses and assigns target to the first entry. 
 func get_target_position():
 	var target_position
 	if is_instance_valid(current_target): #check that target is still valid
 		target_position = current_target.get_global_position()
 	else:
-		update_target()
+		emit_signal("update_target")
 		target_position = current_target.get_global_position()
 	return target_position
 

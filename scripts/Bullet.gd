@@ -10,7 +10,7 @@ func _physics_process(delta):
 
 func hit_target():
 	var tween = create_tween()
-	await tween.tween_property($Sprite2D,"modulate", Color("red"), 1.0).set_trans(Tween.TRANS_SINE)
+	tween.tween_property($Sprite2D,"modulate", Color("red"), 1.0).set_trans(Tween.TRANS_SINE)
 	tween.tween_callback(queue_free)
 
 

@@ -3,12 +3,13 @@
 [ext_resource type="Script" path="res://scripts/ready_area.gd" id="1_vfu33"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8ag7t"]
-size = Vector2(101.5, 646.5)
+size = Vector2(175.5, 646.5)
 
 [node name="ReadyArea" type="Area2D"]
 script = ExtResource("1_vfu33")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-0.25, 0)
 shape = SubResource("RectangleShape2D_8ag7t")
 
 [node name="ColorRect" type="ColorRect" parent="CollisionShape2D"]
@@ -17,10 +18,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -50.0
-offset_top = -324.0
-offset_right = 50.0
-offset_bottom = 324.0
+offset_left = -87.5
+offset_top = -325.0
+offset_right = 87.5
+offset_bottom = 325.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(1, 1, 1, 0.392157)

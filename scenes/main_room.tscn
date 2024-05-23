@@ -1,0 +1,24 @@
+[gd_scene load_steps=7 format=3 uid="uid://r7y4x6ei8c6b"]
+
+[ext_resource type="Script" path="res://scripts/Room.gd" id="1_k2rdj"]
+[ext_resource type="PackedScene" uid="uid://du41pc5lmlpv" path="res://scenes/hud.tscn" id="2_efmdk"]
+[ext_resource type="PackedScene" uid="uid://0upble6y4iu6" path="res://scenes/player.tscn" id="3_gmdo7"]
+[ext_resource type="PackedScene" uid="uid://drpxcubm5tfa" path="res://scenes/boss_room.tscn" id="3_x45ti"]
+[ext_resource type="PackedScene" uid="uid://2kd7j8nf0edk" path="res://scenes/ready_area.tscn" id="4_6i3rr"]
+[ext_resource type="PackedScene" uid="uid://223d0k7qrcav" path="res://scenes/waiting_room.tscn" id="5_kat4d"]
+
+[node name="MainRoom" type="Node2D"]
+script = ExtResource("1_k2rdj")
+waiting_room = ExtResource("5_kat4d")
+boss_room = ExtResource("3_x45ti")
+
+[node name="HUD" parent="." instance=ExtResource("2_efmdk")]
+
+[node name="Player" parent="." instance=ExtResource("3_gmdo7")]
+position = Vector2(357, 292)
+scale = Vector2(0.15, 0.15)
+
+[node name="ReadyArea" parent="." instance=ExtResource("4_6i3rr")]
+position = Vector2(1078, 324)
+
+[node name="WaitingRoom" parent="." instance=ExtResource("5_kat4d")]

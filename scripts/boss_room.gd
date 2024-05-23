@@ -10,66 +10,10 @@ var theta: float = 0.0
 @export var spinning_ray_node: PackedScene
 
 
-var current_target
-var next_target
-
 func _ready():
-	Globals.current_room = "boss_room"
-	
-	Globals.bosses = get_tree().get_nodes_in_group("boss")
-	print("size of boss array now: " + str(Globals.bosses.size()))
-	connect_boss_signals()
-	
-	$Player.connect("changed_target", update_player_target)
-	
-	$Player.current_boss_index = 0
-	$Player.current_target = Globals.bosses[$Player.current_boss_index]
-	
-	current_target = $Player.current_target
-	update_player_target(current_target)
-	
-	$HUD.update_boss_healthbar(current_target.current_health, current_target.max_health)
-
-
-func connect_boss_signals():
-	for boss in Globals.bosses:
-		boss.connect("tree_exiting", _on_boss_tree_exiting.bind(boss))
-
-# Updates the player target to new valid target when a boss despawns on kill
-func _on_boss_tree_exiting(_boss):
-	$HUD.hide_boss_healthbar()
-	
-	Globals.bosses.erase(_boss)
-	print("size of boss array now: " + str(Globals.bosses.size()))
-	
-	if Globals.bosses.is_empty():
-		$ReadyArea.activate()
-		print("last boss removed")
-		
-	$Player.iterate_target()
+	Globals.update_room.emit("boss_room")
 	
 
-
-
-func update_player_target(_target):
-	next_target = _target
-	if next_target != $Player: #check for self targeting (no boss present)
-		if is_instance_valid(next_target):#check to be sure next target is still valid (in cases of multikills)
-			next_target.targeted(true) #always target the new target
-			$HUD.update_boss_healthbar(next_target.current_health, next_target.max_health)
-		
-		if current_target != next_target:#only change if target is different
-			if is_instance_valid(current_target): #check if current target exists before changing sprite
-				current_target.targeted(false)
-				print(str(current_target) + ": untargeted")
-				
-			current_target = next_target #set new current target
-			print(str(current_target) + ": targeted")
-			
-		else:
-			print("same target")
-	else:
-		print("Player targeted")
 
 # Everything in this next section is about spawning various attack types
 

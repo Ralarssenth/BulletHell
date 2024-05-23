@@ -2,6 +2,8 @@ extends Area2D
 
 var timer_counter:int = 3
 
+signal change_scene
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	$TimerLabel.text = str(timer_counter)
@@ -33,8 +35,8 @@ func _on_timer_timeout():
 		$TimerLabel.text = str(timer_counter)
 		$Timer.start(1.0)
 	else:
-		Globals.change_scene()
+		emit_signal("change_scene")
 
-func activate():
-	set_visible(true)
-	$CollisionShape2D.set_deferred("disabled", false)
+func activate(_on):
+	set_visible(_on)
+	$CollisionShape2D.set_deferred("disabled", not _on)
