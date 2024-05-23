@@ -129,7 +129,7 @@ func change_scene():
 	
 	# Tween the player's position back to the left side
 	var tween = create_tween()
-	tween.tween_property($Player,"position:x", 125.0, transition_timer).set_trans(Tween.TRANS_SINE)
+	tween.tween_property($Player,"position", ($Player.position - Vector2(950.0, 0.0)), transition_timer).set_trans(Tween.TRANS_SINE)
 	
 	# Spawn the next room
 	var next_room_instance
@@ -138,6 +138,7 @@ func change_scene():
 			next_room_instance = waiting_room.instantiate()
 		"waiting_room":
 			next_room_instance = boss_room.instantiate()
+			$HUD.hide_boss_healthbar()
 		_:
 			print("change_scene defaulted")
 	await get_tree().create_timer(transition_timer + 1.0).timeout
@@ -145,14 +146,24 @@ func change_scene():
 	
 
 
+# Updates the current_room variable
+# Is called from a global signal emitted from each room's ready function 
+# that passes the room's name as a string
+# Used for functionality that has to wait until the room is ready
 func update_room(_room):
 	current_room = _room
 	print("room updated to: " + str(current_room))
 	
-	# Initialize the bosses
-	bosses = get_tree().get_nodes_in_group("boss")
-	connect_boss_signals()
+	bosses = get_tree().get_nodes_in_group("boss") # Fill the bosses array
 	
-	# Update the player target with the new bosses
-	update_player_target()
+	update_player_target() # Update the player target with the new bosses
 	
+	# Execute room-specific logic to the HUD, UI, or Player
+	match current_room:
+		"boss_room":
+			connect_boss_signals()
+		"waiting_room":
+			# Reactivate the ready area
+			$ReadyArea.activate(true)
+		_:
+			print("update_room defaulted")
