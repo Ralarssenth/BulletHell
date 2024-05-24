@@ -64,9 +64,10 @@ texture = ExtResource("4_a0uba")
 
 [node name="TargetCircle" type="Sprite2D" parent="BossSprite2D"]
 modulate = Color(1, 1, 1, 0.392157)
-position = Vector2(2.85714, -1.42857)
+show_behind_parent = true
+position = Vector2(-1.90735e-06, 2.5332e-06)
 rotation = 0.314159
-scale = Vector2(0.7, 0.7)
+scale = Vector2(0.4, 0.4)
 texture = ExtResource("5_3hhqy")
 offset = Vector2(-8, -10)
 

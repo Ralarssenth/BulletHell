@@ -48,6 +48,8 @@ _data = {
 }
 
 [node name="Boss" type="Area2D" groups=["boss"]]
+position = Vector2(1437, 323)
+scale = Vector2(0.7, 0.7)
 script = ExtResource("1_6ed73")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -77,8 +79,10 @@ texture_progress = ExtResource("3_loj1t")
 texture = ExtResource("3_85ki2")
 
 [node name="TargetCircle" type="Sprite2D" parent="BossSprite2D"]
-visible = false
 modulate = Color(1, 1, 1, 0.392157)
+show_behind_parent = true
+position = Vector2(0, 1.42857)
+scale = Vector2(0.4, 0.4)
 texture = ExtResource("4_5hdf8")
 offset = Vector2(-8, -10)
 

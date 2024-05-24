@@ -4,7 +4,7 @@ extends Node2D
 
 # Fire Boss scenes
 @export var fire_boss1_node: PackedScene
-
+@export var fire_boss2_node: PackedScene
 
 var current_target
 var next_target
@@ -107,7 +107,6 @@ func _on_boss_tree_exiting(_boss):
 	print("size of boss array now: " + str(Globals.bosses.size()))
 	
 	if Globals.bosses.is_empty() and Globals.current_room != "waiting_room":
-		fight_counter += 1
 		$ReadyArea.activate(true)
 		print("last boss removed")
 		
@@ -147,8 +146,11 @@ func change_room_scene():
 			match fight_counter:
 				0:
 					next_boss_instance = fire_boss1_node.instantiate()
-					
+					fight_counter += 1
 				1:
+					next_boss_instance = fire_boss2_node.instantiate()
+					fight_counter += 1
+				2:
 					next_boss_instance = waiting_room.instantiate()
 					fight_counter = 0
 				_:

@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://hqh15ic51d4t"]
 
-[ext_resource type="Script" path="res://scripts/Bullet.gd" id="1_18qvt"]
+[ext_resource type="Script" path="res://scripts/bullet.gd" id="1_18qvt"]
 [ext_resource type="Texture2D" uid="uid://dbowgo75yo6s1" path="res://assets/pointBlank.png" id="2_rba37"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_cf1hj"]

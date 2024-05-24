@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://r7y4x6ei8c6b"]
+[gd_scene load_steps=8 format=3 uid="uid://r7y4x6ei8c6b"]
 
 [ext_resource type="Script" path="res://scripts/main_room.gd" id="1_k2rdj"]
 [ext_resource type="PackedScene" uid="uid://du41pc5lmlpv" path="res://scenes/hud.tscn" id="2_efmdk"]
@@ -6,11 +6,13 @@
 [ext_resource type="PackedScene" uid="uid://bhuapbyawmuoo" path="res://scenes/fire_boss1.tscn" id="3_eqjao"]
 [ext_resource type="PackedScene" uid="uid://0upble6y4iu6" path="res://scenes/player.tscn" id="3_gmdo7"]
 [ext_resource type="PackedScene" uid="uid://2kd7j8nf0edk" path="res://scenes/ready_area.tscn" id="4_6i3rr"]
+[ext_resource type="PackedScene" uid="uid://bibfo0qetxy16" path="res://scenes/fire_boss2.tscn" id="4_h5jx7"]
 
 [node name="MainRoom" type="Node2D"]
 script = ExtResource("1_k2rdj")
 waiting_room = ExtResource("2_lgxio")
 fire_boss1_node = ExtResource("3_eqjao")
+fire_boss2_node = ExtResource("4_h5jx7")
 
 [node name="HUD" parent="." instance=ExtResource("2_efmdk")]
 
