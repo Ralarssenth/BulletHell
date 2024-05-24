@@ -36,6 +36,7 @@ script = ExtResource("1_jfxju")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-1, 0)
+scale = Vector2(0.7, 0.7)
 shape = SubResource("CircleShape2D_7hjjc")
 
 [node name="TextureProgressBar" type="TextureProgressBar" parent="CollisionShape2D"]
@@ -58,12 +59,14 @@ texture_under = ExtResource("2_ssmbc")
 texture_progress = ExtResource("3_h77iy")
 
 [node name="BossSprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.7, 0.7)
 texture = ExtResource("4_a0uba")
 
 [node name="TargetCircle" type="Sprite2D" parent="BossSprite2D"]
-visible = false
 modulate = Color(1, 1, 1, 0.392157)
+position = Vector2(2.85714, -1.42857)
 rotation = 0.314159
+scale = Vector2(0.7, 0.7)
 texture = ExtResource("5_3hhqy")
 offset = Vector2(-8, -10)
 

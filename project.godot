@@ -18,6 +18,7 @@ config/icon="res://assets/bosses/icon.svg"
 [autoload]
 
 Globals="*res://scripts/Globals.gd"
+AttackSpawner="*res://scripts/AttackSpawner.gd"
 
 [input]
 

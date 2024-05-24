@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://bhuapbyawmuoo"]
+
+[ext_resource type="PackedScene" uid="uid://bahxyclakwvh0" path="res://scenes/boss.tscn" id="1_o656s"]
+[ext_resource type="Script" path="res://scripts/fire_boss1.gd" id="2_g4cdn"]
+
+[node name="Boss" instance=ExtResource("1_o656s")]
+script = ExtResource("2_g4cdn")
+
+[node name="BossSprite2D" parent="." index="1"]
+modulate = Color(1, 0, 0, 1)
+
+[node name="AttackTimer" parent="." index="3"]
+one_shot = false
+
+[connection signal="timeout" from="AttackTimer" to="." method="_on_attack_timer_timeout"]
