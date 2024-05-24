@@ -2,7 +2,7 @@ extends Area2D
 
 var timer_counter:int = 3
 
-signal change_scene
+signal change_room_scene
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -20,7 +20,6 @@ func _on_area_entered(area):
 		$Timer.start(1.0)
 
 
-
 func _on_area_exited(area):
 	if area.is_in_group("player"):
 		$TimerLabel.set_visible(false)
@@ -35,7 +34,8 @@ func _on_timer_timeout():
 		$TimerLabel.text = str(timer_counter)
 		$Timer.start(1.0)
 	else:
-		emit_signal("change_scene")
+		emit_signal("change_room_scene")
+
 
 func activate(_on):
 	set_visible(_on)

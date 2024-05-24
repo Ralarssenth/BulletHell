@@ -5,7 +5,7 @@ extends Node2D
 @export var boss_room: PackedScene
 
 var current_room:String
-var bosses = []
+
 
 
 var current_target
@@ -14,12 +14,15 @@ var current_boss_index:int = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	# Connect signals
 	$Player.connect("update_target", update_player_target)
 	$Player.connect("iterate_target", iterate_target)
-	$ReadyArea.connect("change_scene", change_scene)
+	$ReadyArea.connect("change_room_scene", change_room_scene)
 	Globals.update_room.connect(update_room)
+	
+	# Initialize variables
 	current_room = "waiting_room"
-	bosses = get_tree().get_nodes_in_group("boss")
+	Globals.bosses = get_tree().get_nodes_in_group("boss")
 	update_player_target()
 
 
@@ -31,16 +34,16 @@ func _process(delta):
 func update_player_target():
 	# Set next target
 	if current_target == $Player:
-		if bosses.is_empty():
+		if Globals.bosses.is_empty():
 			next_target = $Player
 		else:
 			current_boss_index = 0
-			next_target = bosses[current_boss_index]
+			next_target = Globals.bosses[current_boss_index]
 	else:
-		if bosses.is_empty():
+		if Globals.bosses.is_empty():
 			next_target = $Player
 		else:
-			next_target = bosses[current_boss_index]
+			next_target = Globals.bosses[current_boss_index]
 	
 	# Pass next_target to Player for attack tracking
 	$Player.current_target = next_target
@@ -68,16 +71,16 @@ func update_player_target():
 
 # iterates through multiple targets, if any
 func iterate_target():
-	if not bosses.is_empty():
+	if not Globals.bosses.is_empty():
 		if current_target == $Player:
 			current_boss_index = 0
 		else:
 			current_boss_index += 1
 			
-		if current_boss_index > (bosses.size()  - 1): #wrap back to 0
+		if current_boss_index > (Globals.bosses.size()  - 1): #wrap back to 0
 			current_boss_index = 0
 			
-		next_target = bosses[current_boss_index]
+		next_target = Globals.bosses[current_boss_index]
 	
 	else:
 		next_target = $Player
@@ -87,7 +90,7 @@ func iterate_target():
 
 # Connects all the bosses in the array to _on_boss_tree_exiting below
 func connect_boss_signals():
-	for boss in bosses:
+	for boss in Globals.bosses:
 		boss.connect("tree_exiting", _on_boss_tree_exiting.bind(boss))
 
 
@@ -96,17 +99,18 @@ func connect_boss_signals():
 func _on_boss_tree_exiting(_boss):
 	$HUD.hide_boss_healthbar()
 	
-	bosses.erase(_boss)
-	print("size of boss array now: " + str(bosses.size()))
+	Globals.bosses.erase(_boss)
+	print("size of boss array now: " + str(Globals.bosses.size()))
 	
-	if bosses.is_empty():
+	if Globals.bosses.is_empty():
 		$ReadyArea.activate(true)
 		print("last boss removed")
 		
 	iterate_target()
-	
-# This is a stub for the ready area scene
-func change_scene():
+
+
+# Changes rooms
+func change_room_scene():
 	print("all players ready, scene changing...")
 	# Deactivate the ready area
 	$ReadyArea.activate(false)
@@ -154,7 +158,7 @@ func update_room(_room):
 	current_room = _room
 	print("room updated to: " + str(current_room))
 	
-	bosses = get_tree().get_nodes_in_group("boss") # Fill the bosses array
+	Globals.bosses = get_tree().get_nodes_in_group("boss") # Fill the bosses array
 	
 	update_player_target() # Update the player target with the new bosses
 	

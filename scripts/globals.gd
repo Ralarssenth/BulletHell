@@ -1,5 +1,8 @@
 extends Node
 
+var players = []
+var bosses = []
+
 signal player_damaged
 signal player_died
 signal update_player_target

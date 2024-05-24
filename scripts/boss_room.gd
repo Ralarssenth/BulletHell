@@ -12,6 +12,7 @@ var theta: float = 0.0
 
 func _ready():
 	Globals.update_room.emit("boss_room")
+	Globals.players = get_tree().get_nodes_in_group("player")
 	
 
 
@@ -72,7 +73,7 @@ func spawn_spinning_plus(_position:Vector2, _timer:float, _linger:float, _counte
 	spawn_spinning_ray(_position, Globals.HORIZONTAL_W, _timer, _linger, _counter)
 
 
-# Everything below this point is the functional timeline of the room
+# Everything below this point is a sample functional timeline for the room
 
 func _on_bullet_shoot_speed_timeout():
 	shoot($Boss.position, theta)
@@ -80,21 +81,21 @@ func _on_bullet_shoot_speed_timeout():
 
 func _on_point_blank_timeout():
 	var recast_timer = 3.0
-	spawn_pointBlank($Player.position, 100.0, recast_timer, 0.5)
+	spawn_pointBlank(Globals.players[0].position, 100.0, recast_timer, 0.5)
 	$DonutTimer.set_wait_time(recast_timer)
 	$DonutTimer.start()
 
 func _on_donut_timer_timeout():
 	var recast_timer = 3.0
-	spawn_donut($Player.position, 100.0, 32, recast_timer)
+	spawn_donut(Globals.players[0].position, 100.0, 32, recast_timer)
 	$LineTimer.set_wait_time(recast_timer)
 	$LineTimer.start()
 
 
 func _on_line_timer_timeout():
 	var recast_timer = 5.0
-	spawn_line_attack($Player.position, Globals.VERTICAL_N, 3.5, 0.5)
-	spawn_line_attack($Player.position, Globals.HORIZONTAL_E, 3.5, 0.5)
+	spawn_line_attack(Globals.players[0].position, Globals.VERTICAL_N, 3.5, 0.5)
+	spawn_line_attack(Globals.players[0].position, Globals.HORIZONTAL_E, 3.5, 0.5)
 	$SpinTimer.set_wait_time(recast_timer)
 	$SpinTimer.start()
 
