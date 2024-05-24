@@ -122,15 +122,11 @@ func change_room_scene():
 	
 	var transition_timer = 3.0
 	
-	# Free the old room and all attacks and remaining enemies
+	# Free the old room and all attacks
 	var _room = get_tree().get_nodes_in_group("room")
 	for r in _room:
 		r.queue_free()
 	
-	var _boss = get_tree().get_nodes_in_group("boss")
-	for b in _boss:
-		b.queue_free()
-		
 	var player_attacks = get_tree().get_nodes_in_group("player_hitbox")
 	for attack in player_attacks:
 		attack.queue_free()
@@ -145,15 +141,15 @@ func change_room_scene():
 	tween.tween_property($Player,"position", ($Player.position - Vector2(950.0, 0.0)), transition_timer).set_trans(Tween.TRANS_SINE)
 	
 	# Spawn the next room
-	var next_room_instance
+	var next_boss_instance
 	match Globals.current_route:
 		"fire":
 			match fight_counter:
 				0:
-					next_room_instance = fire_boss1_node.instantiate()
+					next_boss_instance = fire_boss1_node.instantiate()
 					
 				1:
-					next_room_instance = waiting_room.instantiate()
+					next_boss_instance = waiting_room.instantiate()
 					fight_counter = 0
 				_:
 					print("change_boss defaulted in fire route")
@@ -162,8 +158,8 @@ func change_room_scene():
 			print("change_boss defaulted at route choice")
 			
 	await get_tree().create_timer(transition_timer + 1.0).timeout
-	get_tree().current_scene.call_deferred("add_child", next_room_instance)
-	Globals.bosses.append(next_room_instance) # Fill the bosses array
+	get_tree().current_scene.call_deferred("add_child", next_boss_instance)
+	Globals.bosses.append(next_boss_instance) # Fill the bosses array
 	update_player_target() # Update the player target with the new bosses
 	connect_boss_signals()
 

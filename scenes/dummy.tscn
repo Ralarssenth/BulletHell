@@ -31,7 +31,7 @@ _data = {
 "targeted": SubResource("Animation_4n10d")
 }
 
-[node name="Dummy" type="Area2D" groups=["boss"]]
+[node name="Dummy" type="Area2D" groups=["boss", "room"]]
 script = ExtResource("1_jfxju")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

@@ -2,8 +2,9 @@ extends "res://scripts/boss.gd"
 
 var cycle_count: int = 0
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
+# Called from superclass's ready function.
+# Used to add to the ready function instead of overload/replace it
+func setup():
 	var tween = create_tween()
 	tween.tween_property(self,"position", Vector2(500.0, 250.0), 1.0).set_trans(Tween.TRANS_SINE)
 	

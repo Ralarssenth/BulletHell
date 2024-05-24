@@ -7,7 +7,10 @@ var current_health = 100.0
 func _ready():
 	$CollisionShape2D/TextureProgressBar.max_value = max_health
 	$CollisionShape2D/TextureProgressBar.value = current_health
+	setup()
 
+func setup():
+	pass # overload this to add to the ready function
 
 func _on_area_entered(area):
 	if area.is_in_group("player_hitbox"):
