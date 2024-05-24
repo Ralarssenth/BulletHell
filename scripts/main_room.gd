@@ -5,11 +5,12 @@ extends Node2D
 # Fire Boss scenes
 @export var fire_boss1_node: PackedScene
 @export var fire_boss2_node: PackedScene
+@export var fire_boss3_node: PackedScene
 
 var current_target
 var next_target
 var current_boss_index:int = 0
-var fight_counter:int = 0
+var room_counter:int = 0
 
 
 # Called when the node enters the scene tree for the first time.
@@ -18,15 +19,14 @@ func _ready():
 	$Player.connect("update_target", update_player_target)
 	$Player.connect("iterate_target", iterate_target)
 	$ReadyArea.connect("change_room_scene", change_room_scene)
-	Globals.update_room.connect(update_room)
 	
 	# Initialize variables
-	Globals.current_room = "waiting_room"
-	Globals.current_route = "fire" #default route
+	
+	Globals.current_route = "waiting" #default route
+	Globals.next_route = "fire"
 	Globals.bosses = get_tree().get_nodes_in_group("boss") #initialize the bosses array.
 	Globals.players = get_tree().get_nodes_in_group("player") #initialize the players array. This may move (again)
 	update_player_target()
-	connect_boss_signals()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -46,6 +46,8 @@ func update_player_target():
 		if Globals.bosses.is_empty():
 			next_target = $Player
 		else:
+			if current_boss_index >= (Globals.bosses.size()): #wrap back to 0
+				current_boss_index = 0
 			next_target = Globals.bosses[current_boss_index]
 	
 	# Pass next_target to Player for attack tracking
@@ -80,7 +82,7 @@ func iterate_target():
 		else:
 			current_boss_index += 1
 			
-		if current_boss_index > (Globals.bosses.size()  - 1): #wrap back to 0
+		if current_boss_index >= (Globals.bosses.size()): #wrap back to 0
 			current_boss_index = 0
 			
 		next_target = Globals.bosses[current_boss_index]
@@ -95,20 +97,22 @@ func iterate_target():
 func connect_boss_signals():
 	for boss in Globals.bosses:
 		print("connecting: " + str(Globals.bosses))
-		boss.connect("tree_exiting", _on_boss_tree_exiting.bind(boss))
+		boss.connect("tree_exited", _on_boss_tree_exited.bind(boss))
 
 
 # When a boss despawns on kill
 # Updates the player target to new valid target and updates the HUD
-func _on_boss_tree_exiting(_boss):
+func _on_boss_tree_exited(_boss):
 	$HUD.hide_boss_healthbar()
 	
-	Globals.bosses.erase(_boss)
-	print("size of boss array now: " + str(Globals.bosses.size()))
-	
-	if Globals.bosses.is_empty() and Globals.current_room != "waiting_room":
-		$ReadyArea.activate(true)
+	if Globals.bosses.is_empty():
 		print("last boss removed")
+		$ReadyArea.activate(true)
+	
+		# Free any remaining boss attacks
+		var enemy_attacks = get_tree().get_nodes_in_group("enemy_hitbox")
+		for attack in enemy_attacks:
+			attack.queue_free()
 		
 	iterate_target()
 
@@ -129,54 +133,57 @@ func change_room_scene():
 	var player_attacks = get_tree().get_nodes_in_group("player_hitbox")
 	for attack in player_attacks:
 		attack.queue_free()
-		
-	var enemy_attacks = get_tree().get_nodes_in_group("enemy_hitbox")
-	for attack in enemy_attacks:
-		attack.queue_free()
 	
 	
 	# Tween the player's position back to the left side
 	var tween = create_tween()
 	tween.tween_property($Player,"position", ($Player.position - Vector2(950.0, 0.0)), transition_timer).set_trans(Tween.TRANS_SINE)
 	
+	# Catch the waiting room before the match below so that the first route starts there
+	if Globals.current_route == "waiting":
+		Globals.current_route = Globals.next_route
+	
 	# Spawn the next room
 	var next_boss_instance
 	match Globals.current_route:
 		"fire":
-			match fight_counter:
+			match room_counter:
 				0:
 					next_boss_instance = fire_boss1_node.instantiate()
-					fight_counter += 1
+					room_counter += 1
+					
+					Globals.next_route = "waiting"
+					
 				1:
 					next_boss_instance = fire_boss2_node.instantiate()
-					fight_counter += 1
+					room_counter += 1
 				2:
+					next_boss_instance = fire_boss3_node.instantiate()
+					room_counter += 1
+				3:
 					next_boss_instance = waiting_room.instantiate()
-					fight_counter = 0
+					
+					Globals.current_route = Globals.next_route # Advance the route
+					room_counter = 0
 				_:
 					print("change_boss defaulted in fire route")
 					
 		_:
 			print("change_boss defaulted at route choice")
-			
+	
+	# Wait for the player transition and then add the next boss instance to the scene tree
+	# (May have to adjust where this goes for multibosses)
+	next_boss_instance.position = Globals.BOSS_START_SPOT #put the boss in the starting position
 	await get_tree().create_timer(transition_timer + 1.0).timeout
 	get_tree().current_scene.call_deferred("add_child", next_boss_instance)
 	Globals.bosses.append(next_boss_instance) # Fill the bosses array
+	
 	update_player_target() # Update the player target with the new bosses
-	connect_boss_signals()
-
-
-# Updates the current_room variable
-# Is called from a global signal emitted from each room's ready function 
-# that passes the room's name as a string
-# Used for functionality that has to wait until the room is ready
-func update_room(_room):
-	Globals.current_room = _room
-	print("room updated to: " + str(Globals.current_room))
 	
-	
-	
-	# Execute room-specific logic to the HUD, UI, or Player
-	if Globals.current_room == "waiting_room":
-			# Reactivate the ready area
-			$ReadyArea.activate(true)
+	# Check if we have returned to the waiting room and if so, reactivate the ready area
+	# this logic can move later when we add the player drop in/ drop out so that the 
+	# ready area becomes visible when there is an active player 
+	if Globals.current_route == "waiting":
+		$ReadyArea.activate(true) # Reactivate the ready area
+	else:
+		connect_boss_signals()

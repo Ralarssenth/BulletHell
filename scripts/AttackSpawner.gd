@@ -46,55 +46,55 @@ func shoot(_position, angle):
 
 
 # Spawns a circle that activates after a brief delay
-func spawn_pointBlank(_position:Vector2, _size:float, _timer:float, _linger:float):
+func spawn_pointBlank(_position:Vector2, _size:float, _timer:float, _linger:float, _parent:Node):
 	var pointBlank = pointBlank_node.instantiate()
 	
 	pointBlank.init(_position, _size, _timer, _linger)
 	
-	get_tree().current_scene.call_deferred("add_child", pointBlank)
+	_parent.call_deferred("add_child", pointBlank)
 	#print("pointBlank added to scene with params size: " + str(_size) + " and timer: " + str(_timer))
 
 
 # Spawns a ring of bullets after a brief delay 
 # Telegraphs the bullet ring during the delay with a donut sprite
-func spawn_donut(_position:Vector2, _size:float, _density:int, _timer:float):
+func spawn_donut(_position:Vector2, _size:float, _density:int, _timer:float, _parent:Node):
 	var donut = donut_node.instantiate()
 	
 	donut.init(_position, _size, _density, _timer)
 	
-	get_tree().current_scene.call_deferred("add_child", donut)
+	_parent.call_deferred("add_child", donut)
 
 
 # Spawns a line at an angle that activates after a short delay
 # The line draws in both directions at the angle, so north will also give you south etc.
-func spawn_line_attack(_position:Vector2, _angle:float, _timer:float, _linger:float):
+func spawn_line_attack(_position:Vector2, _angle:float, _timer:float, _linger:float, _parent:Node):
 	var line_attack = line_attack_node.instantiate()
 	line_attack.init(_position, _angle, _timer, _linger)
-	get_tree().current_scene.call_deferred("add_child", line_attack)
+	_parent.call_deferred("add_child", line_attack)
 	
 
 
 # Spawns a ray at an angle that rotates on its end
 # The ray only draws in one direction from the endpoint, so N will only draw N and not also S
-func spawn_spinning_ray(_position:Vector2, _angle:float, _timer:float, _linger:float, _counter:int):
+func spawn_spinning_ray(_position:Vector2, _angle:float, _timer:float, _linger:float, _counter:int, _parent:Node):
 	var spinning_ray = spinning_ray_node.instantiate()
 	spinning_ray.init(_position, _angle, _timer, _linger, _counter)
-	get_tree().current_scene.call_deferred("add_child", spinning_ray)
+	_parent.call_deferred("add_child", spinning_ray)
 
 
 # Spawns four spinning rays in an x pattern (on the diagonals)
-func spawn_spinning_x(_position:Vector2, _timer:float, _linger:float, _counter:int):
-	spawn_spinning_ray(_position, DIAGONAL_NE, _timer, _linger, _counter)
-	spawn_spinning_ray(_position, DIAGONAL_NW, _timer, _linger, _counter)
-	spawn_spinning_ray(_position, DIAGONAL_SE, _timer, _linger, _counter)
-	spawn_spinning_ray(_position, DIAGONAL_SW, _timer, _linger, _counter)
+func spawn_spinning_x(_position:Vector2, _timer:float, _linger:float, _counter:int, _parent):
+	spawn_spinning_ray(_position, DIAGONAL_NE, _timer, _linger, _counter, _parent)
+	spawn_spinning_ray(_position, DIAGONAL_NW, _timer, _linger, _counter, _parent)
+	spawn_spinning_ray(_position, DIAGONAL_SE, _timer, _linger, _counter, _parent)
+	spawn_spinning_ray(_position, DIAGONAL_SW, _timer, _linger, _counter, _parent)
 
 
 # Spawns four spinning rays in a + pattern (on the cardinals)
-func spawn_spinning_plus(_position:Vector2, _timer:float, _linger:float, _counter:int):
-	spawn_spinning_ray(_position, VERTICAL_N, _timer, _linger, _counter)
-	spawn_spinning_ray(_position, VERTICAL_S, _timer, _linger, _counter)
-	spawn_spinning_ray(_position, HORIZONTAL_E, _timer, _linger, _counter)
-	spawn_spinning_ray(_position, HORIZONTAL_W, _timer, _linger, _counter)
+func spawn_spinning_plus(_position:Vector2, _timer:float, _linger:float, _counter:int, _parent:Node):
+	spawn_spinning_ray(_position, VERTICAL_N, _timer, _linger, _counter, _parent)
+	spawn_spinning_ray(_position, VERTICAL_S, _timer, _linger, _counter, _parent)
+	spawn_spinning_ray(_position, HORIZONTAL_E, _timer, _linger, _counter, _parent)
+	spawn_spinning_ray(_position, HORIZONTAL_W, _timer, _linger, _counter, _parent)
 
 

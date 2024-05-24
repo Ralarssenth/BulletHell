@@ -7,7 +7,6 @@ var cycle_count: int = 0
 func setup():
 	var tween = create_tween()
 	tween.tween_property(self,"position", Vector2(900.0, 335.0), 1.0).set_trans(Tween.TRANS_SINE)
-	Globals.update_room.emit("fire_boss1")
 	
 	$AttackTimer.start(2.0)
 
@@ -37,13 +36,13 @@ func _on_attack_timer_timeout():
 	if cycle_count < Globals.players.size():
 		for i in range(0,4):
 			#print("i: " + str(i))
-			AttackSpawner.spawn_pointBlank(Globals.players[cycle_count].position, 200.0, 2.0, 1.0)
+			AttackSpawner.spawn_pointBlank(Globals.players[cycle_count].position, 200.0, 2.0, 1.0, get_tree().root)
 			await get_tree().create_timer(0.5).timeout
 			i += 1
 		cycle_count += 1
 		$AttackTimer.start(2.5)
 	else:
-		AttackSpawner.spawn_pointBlank(self.position, 250.0, 3.0, 1.0)
+		AttackSpawner.spawn_pointBlank(Vector2(0.0, 0.0), 250.0, 3.0, 1.0, self)
 		cycle_count = 0
 		$AttackTimer.start(4.5)
 	

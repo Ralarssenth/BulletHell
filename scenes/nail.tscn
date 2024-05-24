@@ -1,0 +1,31 @@
+[gd_scene load_steps=3 format=3 uid="uid://qv2kr1bhnwyp"]
+
+[ext_resource type="PackedScene" uid="uid://bahxyclakwvh0" path="res://scenes/boss.tscn" id="1_m1cbb"]
+[ext_resource type="Script" path="res://scripts/nail.gd" id="2_od3fj"]
+
+[node name="Boss" instance=ExtResource("1_m1cbb")]
+script = ExtResource("2_od3fj")
+
+[node name="CollisionShape2D" parent="." index="0"]
+scale = Vector2(0.3, 0.3)
+
+[node name="BossSprite2D" parent="." index="1"]
+self_modulate = Color(1, 0, 0, 1)
+scale = Vector2(0.3, 0.3)
+
+[node name="TargetCircle" parent="BossSprite2D" index="0"]
+visible = false
+
+[node name="CastProgressBar" type="ProgressBar" parent="." index="4"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -78.5
+offset_top = -46.0
+offset_right = 78.5
+offset_bottom = -19.0
+grow_horizontal = 2
+grow_vertical = 2
+max_value = 10.0

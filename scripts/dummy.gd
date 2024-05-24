@@ -9,7 +9,6 @@ var dps_remainder:float = 0.0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	Globals.update_room.emit("waiting_room")
 	position = Vector2(650.0, 325.0)
 	
 	$CollisionShape2D/TextureProgressBar.max_value = max_health
@@ -55,3 +54,8 @@ func _on_dps_timer_timeout():
 		dps_remainder = 0.0
 		
 	$DPSLabel.text = "DPS: " + str(dps)
+
+
+func _on_tree_exiting():
+	Globals.bosses.erase(self)
+	print("size of boss array now: " + str(Globals.bosses.size()))

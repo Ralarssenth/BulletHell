@@ -48,12 +48,11 @@ _data = {
 }
 
 [node name="Boss" type="Area2D" groups=["boss"]]
-position = Vector2(1437, 323)
-scale = Vector2(0.7, 0.7)
 script = ExtResource("1_6ed73")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-1, 0)
+scale = Vector2(0.7, 0.7)
 shape = SubResource("CircleShape2D_7hjjc")
 
 [node name="TextureProgressBar" type="TextureProgressBar" parent="CollisionShape2D"]
@@ -76,6 +75,7 @@ texture_under = ExtResource("1_rrjr4")
 texture_progress = ExtResource("3_loj1t")
 
 [node name="BossSprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.7, 0.7)
 texture = ExtResource("3_85ki2")
 
 [node name="TargetCircle" type="Sprite2D" parent="BossSprite2D"]
@@ -95,3 +95,4 @@ libraries = {
 one_shot = true
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="tree_exiting" from="." to="." method="_on_tree_exiting"]

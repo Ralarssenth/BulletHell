@@ -6,8 +6,7 @@ var cycle_count: int = 0
 # Used to add to the ready function instead of overload/replace it
 func setup():
 	var tween = create_tween()
-	tween.tween_property(self,"position", Vector2(500.0, 335.0), 1.0).set_trans(Tween.TRANS_SINE)
-	Globals.update_room.emit("fire_boss2")
+	tween.tween_property(self,"position", Vector2(550.0, 335.0), 1.0).set_trans(Tween.TRANS_SINE)
 	
 	$AttackTimer.start(2.0)
 
@@ -29,13 +28,13 @@ func _on_attack_timer_timeout():
 	#print("players array size: " + str(Globals.players.size()))
 	
 	tween.tween_property(self,"position:y", Globals.players[cycle_count].position.y, movement_timer).set_trans(Tween.TRANS_SINE)
-	await get_tree().create_timer(movement_timer + buffer_timer).timeout
-	AttackSpawner.spawn_line_attack(self.position, AttackSpawner.HORIZONTAL_E, 2.0, 2.0)
+	await get_tree().create_timer(movement_timer).timeout
+	AttackSpawner.spawn_line_attack(self.position, AttackSpawner.HORIZONTAL_E, 2.0, 2.0, get_tree().root)
 
 	cycle_count += 1
 	if cycle_count >= Globals.players.size():
 		cycle_count = 0
 		
-	$AttackTimer.start(2.5)
+	$AttackTimer.start(2.0)
 	
 	

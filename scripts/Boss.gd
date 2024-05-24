@@ -35,3 +35,8 @@ func targeted(on):
 		$AnimationPlayer.play("targeted")
 	else:
 		$AnimationPlayer.stop()
+
+
+func _on_tree_exiting():
+	Globals.bosses.erase(self)
+	print("size of boss array now: " + str(Globals.bosses.size()))
