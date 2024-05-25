@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://0upble6y4iu6"]
+[gd_scene load_steps=27 format=3 uid="uid://0upble6y4iu6"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_48mg1"]
 [ext_resource type="Texture2D" uid="uid://c8vt5dpwcaq34" path="res://assets/player/armBack.png" id="1_f12gu"]
@@ -11,6 +11,11 @@
 [ext_resource type="Texture2D" uid="uid://bt64yvgv4a1ke" path="res://assets/player/armFront.png" id="6_rqt5e"]
 [ext_resource type="Texture2D" uid="uid://c1r6pj5yksvu" path="res://assets/player/donut.png" id="8_5o2e1"]
 [ext_resource type="Texture2D" uid="uid://6ybeiiwy8kwd" path="res://assets/player/pointBlank.png" id="9_vqaj3"]
+[ext_resource type="Texture2D" uid="uid://dhawihxgd73uy" path="res://assets/player/attack1Button.png" id="12_xwfgm"]
+[ext_resource type="Texture2D" uid="uid://dneqtf6h0npdk" path="res://assets/player/buttonProgress.png" id="13_xan6u"]
+[ext_resource type="Texture2D" uid="uid://cjql4yj0v6g7e" path="res://assets/player/attack2Button.png" id="14_ixbpu"]
+[ext_resource type="Texture2D" uid="uid://bjccsac6ycahr" path="res://assets/player/attack3Button.png" id="15_fdkj7"]
+[ext_resource type="Texture2D" uid="uid://g1buc5dhtjqu" path="res://assets/player/defensiveButton.png" id="16_s6eu5"]
 
 [sub_resource type="Animation" id="Animation_maaag"]
 length = 0.001
@@ -374,6 +379,42 @@ one_shot = true
 
 [node name="DefensiveCDTimer" type="Timer" parent="."]
 one_shot = true
+
+[node name="Attack1ProgressBar" type="TextureProgressBar" parent="."]
+offset_left = -539.0
+offset_top = 64.3333
+offset_right = -419.0
+offset_bottom = 184.333
+fill_mode = 4
+texture_under = ExtResource("12_xwfgm")
+texture_progress = ExtResource("13_xan6u")
+
+[node name="Attack2ProgressBar" type="TextureProgressBar" parent="."]
+offset_left = -417.667
+offset_top = 183.667
+offset_right = -297.667
+offset_bottom = 303.667
+fill_mode = 4
+texture_under = ExtResource("14_ixbpu")
+texture_progress = ExtResource("13_xan6u")
+
+[node name="Attack3ProgressBar" type="TextureProgressBar" parent="."]
+offset_left = -297.333
+offset_top = 64.3333
+offset_right = -177.333
+offset_bottom = 184.333
+fill_mode = 4
+texture_under = ExtResource("15_fdkj7")
+texture_progress = ExtResource("13_xan6u")
+
+[node name="DefensiveProgressBar" type="TextureProgressBar" parent="."]
+offset_left = -417.667
+offset_top = -57.0
+offset_right = -297.667
+offset_bottom = 63.0
+fill_mode = 4
+texture_under = ExtResource("16_s6eu5")
+texture_progress = ExtResource("13_xan6u")
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
 [connection signal="timeout" from="InvulnTimer" to="." method="_on_invuln_timer_timeout"]

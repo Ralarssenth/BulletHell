@@ -1,37 +1,63 @@
 extends Area2D
 
+# the player's attack node locations
 @export var player_aoe_attack_node: PackedScene
 @export var player_bullet_node: PackedScene
 
+# Player movement speed 
 const BASE_SPEED = 300.0
 var current_speed = 300.0
 var speed = 300.0
 var velocity = Vector2.ZERO
 
+#Player states
 enum MOVE_STATE {IDLE, FORWARD, BACKWARD}
 var current_move_state = MOVE_STATE.IDLE
+var can_input = false
 
-
+# Targeting
 var current_target = self
 signal iterate_target
 signal update_target
 
-var attack_1 = {"speed": 200.0, "GCD": 1.5, "damage": 15.0}
+
+# Attack stats
+var attack_1 = {"speed": 500.0, "GCD": 1.5, "damage": 15.0}
 var attack_2 = {"size": 200.0, "timer": 0.5, "linger": 0.5, "GCD": 1.5, "damage": 3.0}
 var attack_3 = {"size": 300.0, "timer": 0.5, "linger": 0.5, "GCD": 1.5, "damage": 10.0}
 var defensive_stats = {"duration": 2.0, "speed_multiplier": 2.0, "cooldown": 10.0}
 
+# Attack cd tweens
+var attack1_tween
+var attack2_tween
+var attack3_tween
+var defensive_tween
+var tweens = [attack1_tween, attack2_tween, attack3_tween, defensive_tween]
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	Globals.player_died.connect(_on_player_died)
-	
+	# set the input state to true
+	can_input = true
 	#set the initial target
 	current_target = self
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	# movement input
 	move_and_animate(delta)
+	
+	# attack input
+	if can_input == true:
+		if Input.is_action_pressed("attack_1"):
+			attack1_shoot_bullet()
+		if Input.is_action_pressed("attack_2"):
+			attack2_aoe_ranged()
+		if Input.is_action_pressed("attack_3"):
+			attack3_aoe_self()
+		if Input.is_action_pressed("defensive"):
+			defensive()
 	
 
 func _input(event):
@@ -40,14 +66,7 @@ func _input(event):
 	if event.is_action_released("shift"):
 		toggle_tight(false)
 		emit_signal("iterate_target")
-	if event.is_action_pressed("attack_1"):
-		attack1_shoot_bullet()
-	if event.is_action_pressed("attack_2"):
-		attack2_aoe_ranged()
-	if event.is_action_pressed("attack_3"):
-		attack3_aoe_self()
-	if event.is_action_pressed("defensive"):
-		defensive()
+	
 
 
 # Get the input direction and handle the movement/deceleration.
@@ -163,6 +182,9 @@ func attack1_shoot_bullet():
 		
 		$GCDTimer.set_wait_time(attack_1["GCD"])
 		$GCDTimer.start()
+		attack1_cooldown_animation(attack_1["GCD"])
+		attack2_cooldown_animation(attack_1["GCD"])
+		attack3_cooldown_animation(attack_1["GCD"])
 
 
 # A circle attack that spawns on the target's position from range
@@ -180,6 +202,9 @@ func attack2_aoe_ranged():
 		
 		$GCDTimer.set_wait_time(attack_2["GCD"])
 		$GCDTimer.start()
+		attack1_cooldown_animation(attack_2["GCD"])
+		attack2_cooldown_animation(attack_2["GCD"])
+		attack3_cooldown_animation(attack_2["GCD"])
 
 # A circle attack that spawns on the player's position
 func attack3_aoe_self():
@@ -196,6 +221,9 @@ func attack3_aoe_self():
 		
 		$GCDTimer.set_wait_time(attack_3["GCD"])
 		$GCDTimer.start()
+		attack1_cooldown_animation(attack_3["GCD"])
+		attack2_cooldown_animation(attack_3["GCD"])
+		attack3_cooldown_animation(attack_3["GCD"])
 	
 func defensive():
 	if $DefensiveCDTimer.is_stopped():
@@ -204,6 +232,7 @@ func defensive():
 		$DefensiveCDTimer.set_wait_time(defensive_stats["cooldown"])
 		$DefensiveCDTimer.start()
 		invuln(defensive_stats["duration"], "defensive")
+		defensive_cooldown_animation()
 
 
 func _on_invuln_timer_timeout():
@@ -211,3 +240,39 @@ func _on_invuln_timer_timeout():
 	speed = BASE_SPEED
 	current_speed = BASE_SPEED
 	
+
+func attack1_cooldown_animation(_duration):
+	$Attack1ProgressBar.value = 100
+	tweens[0] = create_tween()
+	tweens[0].tween_property($Attack1ProgressBar, "value", 0.0, _duration)
+
+func attack2_cooldown_animation(_duration):
+	$Attack2ProgressBar.value = 100
+	tweens[1] = create_tween()
+	tweens[1].tween_property($Attack2ProgressBar, "value", 0.0, _duration)
+
+func attack3_cooldown_animation(_duration):
+	$Attack3ProgressBar.value = 100
+	tweens[2] = create_tween()
+	tweens[2].tween_property($Attack3ProgressBar, "value", 0.0, _duration)
+
+func defensive_cooldown_animation():
+	$DefensiveProgressBar.value = 100
+	tweens[3] = create_tween()
+	tweens[3].tween_property($DefensiveProgressBar, "value", 0.0, defensive_stats["cooldown"])
+
+func reset_cooldowns():
+	# reset the button visuals
+	for tween in tweens:
+		if is_instance_valid(tween):
+			tween.stop()
+	
+	$Attack1ProgressBar.value = 0
+	$Attack2ProgressBar.value = 0
+	$Attack3ProgressBar.value = 0
+	$DefensiveProgressBar.value = 0
+	
+	# stop the timers
+	$InvulnTimer.stop()
+	$GCDTimer.stop()
+	$DefensiveCDTimer.stop()

@@ -135,9 +135,11 @@ func change_room_scene():
 		attack.queue_free()
 	
 	
-	# Tween the player's position back to the left side
+	# Tween the player's position back to the left side and reset their cd's
 	var tween = create_tween()
 	tween.tween_property($Player,"position", ($Player.position - Vector2(950.0, 0.0)), transition_timer).set_trans(Tween.TRANS_SINE)
+	$Player.reset_cooldowns()
+	$Player.can_input = false #disallow inputs during transition
 	
 	# Catch the waiting room before the match below so that the first route starts there
 	if Globals.current_route == "waiting":
@@ -179,6 +181,7 @@ func change_room_scene():
 	Globals.bosses.append(next_boss_instance) # Fill the bosses array
 	
 	update_player_target() # Update the player target with the new bosses
+	$Player.can_input = true #reallow inputs
 	
 	# Check if we have returned to the waiting room and if so, reactivate the ready area
 	# this logic can move later when we add the player drop in/ drop out so that the 
