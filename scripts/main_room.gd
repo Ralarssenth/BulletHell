@@ -166,6 +166,7 @@ func change_room_scene():
 					next_boss_instance = waiting_room.instantiate()
 					
 					Globals.current_route = Globals.next_route # Advance the route
+					Globals.next_route = "fire"
 					room_counter = 0
 				_:
 					print("change_boss defaulted in fire route")
