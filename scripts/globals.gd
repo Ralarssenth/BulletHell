@@ -8,6 +8,7 @@ var current_route: String = ""
 var next_route: String = ""
 
 signal player_damaged
+signal player_healed
 signal player_died
 signal update_player_target
 signal boss_damaged(current_health, max_health)

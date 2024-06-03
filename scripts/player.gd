@@ -13,7 +13,8 @@ var velocity = Vector2.ZERO
 #Player states
 enum MOVE_STATE {IDLE, FORWARD, BACKWARD}
 var current_move_state = MOVE_STATE.IDLE
-var can_input = false
+var can_attack = false
+var can_move = false
 
 # Targeting
 var current_target = self
@@ -38,7 +39,8 @@ var tweens = [attack1_tween, attack2_tween, attack3_tween, defensive_tween]
 func _ready():
 	Globals.player_died.connect(_on_player_died)
 	# set the input state to true
-	can_input = true
+	can_attack = true
+	can_move = true
 	#set the initial target
 	current_target = self
 
@@ -46,10 +48,11 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	# movement input
-	move_and_animate(delta)
+	if can_move == true:
+		move_and_animate(delta)
 	
 	# attack input
-	if can_input == true:
+	if can_attack == true:
 		if Input.is_action_pressed("attack_1"):
 			attack1_shoot_bullet()
 		if Input.is_action_pressed("attack_2"):
@@ -138,9 +141,10 @@ func invuln(duration:float, animation:String):
 		$InvulnTimer.start()
 		$ColorAnimationPlayer.play(animation)
 
-
+# This is currently a stub for the player death logic
 func _on_player_died():
 	queue_free()
+
 
 
 # Gets the array of bosses and assigns target to the first entry. 

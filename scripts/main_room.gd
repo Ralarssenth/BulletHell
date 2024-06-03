@@ -1,6 +1,8 @@
 extends Node2D
 
+# Menu Scenes
 @export var waiting_room: PackedScene 
+@export var shop_node: PackedScene
 
 # Fire Boss scenes
 @export var fire_boss1_node: PackedScene
@@ -139,7 +141,7 @@ func change_room_scene():
 	var tween = create_tween()
 	tween.tween_property($Player,"position", ($Player.position - Vector2(950.0, 0.0)), transition_timer).set_trans(Tween.TRANS_SINE)
 	$Player.reset_cooldowns()
-	$Player.can_input = false #disallow inputs during transition
+	$Player.can_attack = false #disallow inputs during transition
 	
 	# Catch the waiting room before the match below so that the first route starts there
 	if Globals.current_route == "waiting":
@@ -156,33 +158,66 @@ func change_room_scene():
 					
 					Globals.next_route = "waiting"
 					
+					# Wait for the player transition and then add the next boss instance to the scene tree
+					# (May have to adjust where this goes for multibosses)
+					next_boss_instance.position = Globals.BOSS_START_SPOT #put the boss in the starting position
+					await get_tree().create_timer(transition_timer + 1.0).timeout
+					get_tree().current_scene.call_deferred("add_child", next_boss_instance)
+					Globals.bosses.append(next_boss_instance) # Fill the bosses array
+					
 				1:
 					next_boss_instance = fire_boss2_node.instantiate()
 					room_counter += 1
+					# Wait for the player transition and then add the next boss instance to the scene tree
+					# (May have to adjust where this goes for multibosses)
+					next_boss_instance.position = Globals.BOSS_START_SPOT #put the boss in the starting position
+					await get_tree().create_timer(transition_timer + 1.0).timeout
+					get_tree().current_scene.call_deferred("add_child", next_boss_instance)
+					Globals.bosses.append(next_boss_instance) # Fill the bosses array
+				
 				2:
 					next_boss_instance = fire_boss3_node.instantiate()
 					room_counter += 1
+					# Wait for the player transition and then add the next boss instance to the scene tree
+					# (May have to adjust where this goes for multibosses)
+					next_boss_instance.position = Globals.BOSS_START_SPOT #put the boss in the starting position
+					await get_tree().create_timer(transition_timer + 1.0).timeout
+					get_tree().current_scene.call_deferred("add_child", next_boss_instance)
+					Globals.bosses.append(next_boss_instance) # Fill the bosses array
+					
 				3:
+					next_boss_instance = shop_node.instantiate()
+					room_counter += 1
+					# Wait for the player transition and then add the next boss instance to the scene tree
+					# (May have to adjust where this goes for multibosses)
+					
+					await get_tree().create_timer(transition_timer + 1.0).timeout
+					get_tree().current_scene.call_deferred("add_child", next_boss_instance)
+					$ReadyArea.activate(true) # Reactivate the ready area
+					
+				4:
 					next_boss_instance = waiting_room.instantiate()
 					
 					Globals.current_route = Globals.next_route # Advance the route
 					Globals.next_route = "fire"
 					room_counter = 0
+					
+					# Wait for the player transition and then add the next boss instance to the scene tree
+					# (May have to adjust where this goes for multibosses)
+					next_boss_instance.position = Globals.BOSS_START_SPOT #put the boss in the starting position
+					await get_tree().create_timer(transition_timer + 1.0).timeout
+					get_tree().current_scene.call_deferred("add_child", next_boss_instance)
+					Globals.bosses.append(next_boss_instance) # Fill the bosses array
 				_:
 					print("change_boss defaulted in fire route")
 					
 		_:
 			print("change_boss defaulted at route choice")
 	
-	# Wait for the player transition and then add the next boss instance to the scene tree
-	# (May have to adjust where this goes for multibosses)
-	next_boss_instance.position = Globals.BOSS_START_SPOT #put the boss in the starting position
-	await get_tree().create_timer(transition_timer + 1.0).timeout
-	get_tree().current_scene.call_deferred("add_child", next_boss_instance)
-	Globals.bosses.append(next_boss_instance) # Fill the bosses array
+	
 	
 	update_player_target() # Update the player target with the new bosses
-	$Player.can_input = true #reallow inputs
+	$Player.can_attack = true #reallow inputs
 	
 	# Check if we have returned to the waiting room and if so, reactivate the ready area
 	# this logic can move later when we add the player drop in/ drop out so that the 

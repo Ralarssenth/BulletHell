@@ -1,0 +1,125 @@
+[gd_scene load_steps=7 format=3 uid="uid://bseavu62jtci7"]
+
+[ext_resource type="Texture2D" uid="uid://d058aqm0cbegr" path="res://assets/HUD/shopkeeper.png" id="1_h5mdx"]
+[ext_resource type="Script" path="res://scripts/shop.gd" id="1_hiyuo"]
+[ext_resource type="Texture2D" uid="uid://c1lcsblydkfvf" path="res://assets/HUD/shop_button_heal.png" id="3_4tpvs"]
+[ext_resource type="Texture2D" uid="uid://bw8bhkoxbkbdg" path="res://assets/HUD/shop_button_heal_pressed.png" id="4_8h7fj"]
+[ext_resource type="Texture2D" uid="uid://bhudyh51d1s4i" path="res://assets/HUD/shop_button_focused.png" id="5_hv0aa"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2cwa5"]
+size = Vector2(264, 276)
+
+[node name="Node2D" type="Node2D" groups=["room"]]
+position = Vector2(580, 329)
+script = ExtResource("1_hiyuo")
+
+[node name="ShopKeeper" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ShopKeeper"]
+shape = SubResource("RectangleShape2D_2cwa5")
+
+[node name="ShopSprite2D" type="Sprite2D" parent="ShopKeeper"]
+texture = ExtResource("1_h5mdx")
+
+[node name="ShopScreen" type="ColorRect" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -406.5
+offset_top = -231.0
+offset_right = 406.5
+offset_bottom = 231.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(4.81308e-08, 0.348742, 0.521369, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="ShopScreen"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -408.0
+offset_right = 408.0
+offset_bottom = 426.0
+grow_horizontal = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 25
+theme_override_constants/margin_bottom = 25
+
+[node name="GridContainer" type="GridContainer" parent="ShopScreen/MarginContainer"]
+layout_mode = 2
+theme_override_constants/h_separation = 15
+theme_override_constants/v_separation = 15
+columns = 4
+
+[node name="Heal" type="TextureButton" parent="ShopScreen/MarginContainer/GridContainer"]
+layout_mode = 2
+texture_normal = ExtResource("3_4tpvs")
+texture_pressed = ExtResource("4_8h7fj")
+texture_focused = ExtResource("5_hv0aa")
+
+[node name="Heal2" type="TextureButton" parent="ShopScreen/MarginContainer/GridContainer"]
+layout_mode = 2
+texture_normal = ExtResource("3_4tpvs")
+texture_pressed = ExtResource("4_8h7fj")
+texture_focused = ExtResource("5_hv0aa")
+
+[node name="Heal3" type="TextureButton" parent="ShopScreen/MarginContainer/GridContainer"]
+layout_mode = 2
+texture_normal = ExtResource("3_4tpvs")
+texture_pressed = ExtResource("4_8h7fj")
+texture_focused = ExtResource("5_hv0aa")
+
+[node name="Heal4" type="TextureButton" parent="ShopScreen/MarginContainer/GridContainer"]
+layout_mode = 2
+texture_normal = ExtResource("3_4tpvs")
+texture_pressed = ExtResource("4_8h7fj")
+texture_focused = ExtResource("5_hv0aa")
+
+[node name="Heal5" type="TextureButton" parent="ShopScreen/MarginContainer/GridContainer"]
+layout_mode = 2
+texture_normal = ExtResource("3_4tpvs")
+texture_pressed = ExtResource("4_8h7fj")
+texture_focused = ExtResource("5_hv0aa")
+
+[node name="Heal6" type="TextureButton" parent="ShopScreen/MarginContainer/GridContainer"]
+layout_mode = 2
+texture_normal = ExtResource("3_4tpvs")
+texture_pressed = ExtResource("4_8h7fj")
+texture_focused = ExtResource("5_hv0aa")
+
+[node name="Heal7" type="TextureButton" parent="ShopScreen/MarginContainer/GridContainer"]
+layout_mode = 2
+texture_normal = ExtResource("3_4tpvs")
+texture_pressed = ExtResource("4_8h7fj")
+texture_focused = ExtResource("5_hv0aa")
+
+[node name="Heal8" type="TextureButton" parent="ShopScreen/MarginContainer/GridContainer"]
+layout_mode = 2
+texture_normal = ExtResource("3_4tpvs")
+texture_pressed = ExtResource("4_8h7fj")
+texture_focused = ExtResource("5_hv0aa")
+
+[node name="ColorRect" type="ColorRect" parent="ShopScreen/MarginContainer/GridContainer"]
+layout_mode = 2
+color = Color(1, 1, 1, 0)
+
+[node name="ColorRect2" type="ColorRect" parent="ShopScreen/MarginContainer/GridContainer"]
+layout_mode = 2
+color = Color(1, 1, 1, 0)
+
+[node name="ColorRect3" type="ColorRect" parent="ShopScreen/MarginContainer/GridContainer"]
+layout_mode = 2
+color = Color(1, 1, 1, 0)
+
+[node name="LeaveShopButton" type="Button" parent="ShopScreen/MarginContainer/GridContainer"]
+layout_mode = 2
+text = "Leave Shop"
+
+[connection signal="area_entered" from="ShopKeeper" to="." method="_on_shop_keeper_area_entered"]
+[connection signal="area_exited" from="ShopKeeper" to="." method="_on_shop_keeper_area_exited"]
+[connection signal="pressed" from="ShopScreen/MarginContainer/GridContainer/Heal" to="." method="_on_heal_pressed"]
+[connection signal="pressed" from="ShopScreen/MarginContainer/GridContainer/LeaveShopButton" to="." method="_on_leave_shop_button_pressed"]
