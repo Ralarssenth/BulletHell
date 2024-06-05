@@ -139,11 +139,11 @@ func change_room_scene():
 	
 	# Tween the player's position back to the left side and reset their cd's
 	var tween = create_tween()
-	tween.tween_property($Player,"position", ($Player.position - Vector2(950.0, 0.0)), transition_timer).set_trans(Tween.TRANS_SINE)
+	tween.tween_property($Player,"position", ($Player.position - Vector2(1700.0, 0.0)), transition_timer).set_trans(Tween.TRANS_SINE)
 	$Player.reset_cooldowns()
 	$Player.can_attack = false #disallow inputs during transition
 	
-	# Catch the waiting room before the match below so that the first route starts there
+	# Catch the waiting room before the match/case below so that the first route starts there
 	if Globals.current_route == "waiting":
 		Globals.current_route = Globals.next_route
 	

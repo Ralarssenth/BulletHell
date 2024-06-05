@@ -3,13 +3,14 @@
 [ext_resource type="Script" path="res://scripts/ready_area.gd" id="1_vfu33"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8ag7t"]
-size = Vector2(175.5, 646.5)
+size = Vector2(175.5, 1091.25)
 
 [node name="ReadyArea" type="Area2D"]
+position = Vector2(1839, 316)
 script = ExtResource("1_vfu33")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-0.25, 0)
+position = Vector2(-0.25, 222.375)
 shape = SubResource("RectangleShape2D_8ag7t")
 
 [node name="ColorRect" type="ColorRect" parent="CollisionShape2D"]
@@ -18,10 +19,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -87.5
-offset_top = -325.0
-offset_right = 87.5
-offset_bottom = 325.0
+offset_left = -87.0
+offset_top = -545.0
+offset_right = 88.0
+offset_bottom = 545.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(1, 1, 1, 0.392157)
@@ -32,10 +33,10 @@ one_shot = true
 
 [node name="TimerLabel" type="Label" parent="."]
 visible = false
-offset_left = -4.0
-offset_top = -236.0
-offset_right = 36.0
-offset_bottom = -213.0
+offset_left = -2.0
+offset_top = -197.0
+offset_right = 38.0
+offset_bottom = -174.0
 text = "3"
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]

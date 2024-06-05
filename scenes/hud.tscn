@@ -7,10 +7,10 @@
 script = ExtResource("1_mcw2y")
 
 [node name="Healthbar" parent="." instance=ExtResource("1_l6iip")]
-position = Vector2(0, 390)
+position = Vector2(8, 817)
 scale = Vector2(0.4, 0.4)
 
 [node name="BossProgressBar" type="ProgressBar" parent="."]
-visible = false
-offset_right = 1152.0
-offset_bottom = 27.0
+offset_left = 2.0
+offset_right = 1914.0
+offset_bottom = 45.0

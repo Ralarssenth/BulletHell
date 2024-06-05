@@ -6,7 +6,7 @@ var cycle_count: int = 0
 # Used to add to the ready function instead of overload/replace it
 func setup():
 	var tween = create_tween()
-	tween.tween_property(self,"position", Vector2(550.0, 335.0), 1.0).set_trans(Tween.TRANS_SINE)
+	tween.tween_property(self,"position", Vector2(960.0, 540.0), 1.0).set_trans(Tween.TRANS_SINE)
 	
 	$AttackTimer.start(2.0)
 

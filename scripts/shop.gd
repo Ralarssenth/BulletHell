@@ -21,12 +21,14 @@ func _input(event):
 
 func _on_shop_keeper_area_entered(area):
 	if area.is_in_group("player"):
+		print("shop entered by player: " + str(area))
 		player = area
 		player_in_shop = true
 		
 
 func _on_shop_keeper_area_exited(area):
-	player_in_shop = false
+	if area.is_in_group("player"):
+		player_in_shop = false
 
 
 func _on_leave_shop_button_pressed():

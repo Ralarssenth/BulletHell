@@ -18,14 +18,14 @@ fire_boss1_node = ExtResource("3_eqjao")
 fire_boss2_node = ExtResource("4_h5jx7")
 fire_boss3_node = ExtResource("5_ediw3")
 
-[node name="HUD" parent="." instance=ExtResource("2_efmdk")]
+[node name="ReadyArea" parent="." instance=ExtResource("4_6i3rr")]
+position = Vector2(1836, 319)
 
 [node name="Player" parent="." instance=ExtResource("3_gmdo7")]
-position = Vector2(136, 336)
+position = Vector2(359, 554)
 scale = Vector2(0.15, 0.15)
 
-[node name="ReadyArea" parent="." instance=ExtResource("4_6i3rr")]
-position = Vector2(1078, 324)
-
 [node name="Dummy" parent="." instance=ExtResource("2_lgxio")]
-position = Vector2(650, 325)
+position = Vector2(990, 550)
+
+[node name="HUD" parent="." instance=ExtResource("2_efmdk")]

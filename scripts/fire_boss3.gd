@@ -8,7 +8,7 @@ var cycle_count: int = 0
 # Used to add to the ready function instead of overload/replace it
 func setup():
 	var tween = create_tween()
-	tween.tween_property(self, "position", Vector2(550.0, 335.0), 1.0).set_trans(Tween.TRANS_SINE)
+	tween.tween_property(self, "position", Vector2(960.0, 540.0), 1.0).set_trans(Tween.TRANS_SINE)
 	
 	$AttackTimer.start(2.0)
 
@@ -23,14 +23,14 @@ func _process(delta):
 # with a long warmup time unless it is killed first
 func _on_attack_timer_timeout():
 	var nail1 = nail_node.instantiate()
-	nail1.position = Vector2(-450, 0)
-	nail1.aoe_size = 1200.0
+	nail1.position = Vector2(-650, 0)
+	nail1.aoe_size = 1500.0
 	nail1. aoe_timer = 15.0
 	nail1.aoe_linger = 0.1
 	
 	var nail2 = nail_node.instantiate()
-	nail2.position = Vector2(450, 0)
-	nail2.aoe_size = 1200.0
+	nail2.position = Vector2(650, 0)
+	nail2.aoe_size = 1500.0
 	nail2. aoe_timer = 15.0
 	nail2.aoe_linger = 0.1
 	

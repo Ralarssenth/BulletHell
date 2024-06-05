@@ -1,6 +1,6 @@
 extends Node
 
-const BOSS_START_SPOT = Vector2(1500, 335)
+const BOSS_START_SPOT = Vector2(2250, 650)
 
 var players = []
 var bosses = []

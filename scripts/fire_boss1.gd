@@ -6,7 +6,7 @@ var cycle_count: int = 0
 # Used to add to the ready function instead of overload/replace it
 func setup():
 	var tween = create_tween()
-	tween.tween_property(self,"position", Vector2(900.0, 335.0), 1.0).set_trans(Tween.TRANS_SINE)
+	tween.tween_property(self,"position", Vector2(1310.0, 540.0), 1.0).set_trans(Tween.TRANS_SINE)
 	
 	$AttackTimer.start(2.0)
 
@@ -25,9 +25,9 @@ func _on_attack_timer_timeout():
 	var movement_timer = 1.0
 	var buffer_timer = 0.5
 	if cycle_count % 2 == 0: # go left 500
-		tween.tween_property(self,"position", self.position - Vector2(500.0, 0.0), movement_timer).set_trans(Tween.TRANS_SINE)
+		tween.tween_property(self,"position", self.position - Vector2(700.0, 0.0), movement_timer).set_trans(Tween.TRANS_SINE)
 	else: # go right 500
-		tween.tween_property(self,"position", self.position + Vector2(500.0, 0.0), movement_timer).set_trans(Tween.TRANS_SINE)
+		tween.tween_property(self,"position", self.position + Vector2(700.0, 0.0), movement_timer).set_trans(Tween.TRANS_SINE)
 	await get_tree().create_timer(movement_timer + buffer_timer).timeout
 	
 	#print("cycle count: " + str(cycle_count))
