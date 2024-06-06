@@ -20,6 +20,10 @@ config/icon="res://assets/bosses/icon.svg"
 Globals="*res://scripts/Globals.gd"
 AttackSpawner="*res://scripts/AttackSpawner.gd"
 
+[debug]
+
+file_logging/enable_file_logging=true
+
 [display]
 
 window/size/viewport_width=1920
