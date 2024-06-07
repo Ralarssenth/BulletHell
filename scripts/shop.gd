@@ -12,15 +12,15 @@ func _process(delta):
 
 func _input(event):
 	if event.is_action_pressed("select"):
-		Globals.players[0].can_move = false
-		Globals.players[0].can_attack = false
+		Globals.can_move = false
+		Globals.can_attack = false
 		$ShopScreen.set_visible(true)
 		$ShopScreen/MarginContainer/GridContainer/LeaveShopButton.grab_focus()
 
 
 func _on_leave_shop_button_pressed():
-	Globals.players[0].can_move = true
-	Globals.players[0].can_attack = true
+	Globals.can_move = true
+	Globals.can_attack = true
 	$ShopScreen.set_visible(false)
 
 

@@ -23,8 +23,7 @@ var velocity = Vector2.ZERO
 #Player states
 enum MOVE_STATE {IDLE, FORWARD, BACKWARD}
 var current_move_state = MOVE_STATE.IDLE
-var can_attack = false
-var can_move = false
+
 
 # Targeting
 var current_target = self
@@ -48,8 +47,8 @@ func _ready():
 	Globals.player_died.connect(_on_player_died)
 	Globals.players.append(self)
 	# set the input state to true
-	can_attack = true
-	can_move = true
+	Globals.can_attack = true
+	Globals.can_move = true
 	#set the initial target
 	current_target = self
 	Globals.players_changed.emit()
@@ -58,11 +57,11 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	# movement input
-	if can_move == true:
+	if Globals.can_move == true:
 		move_and_animate(delta)
 	
 	# attack input
-	if can_attack == true:
+	if Globals.can_attack == true:
 		if input.attack1:
 			attack1_shoot_bullet()
 		if input.attack2:

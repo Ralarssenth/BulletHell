@@ -7,6 +7,9 @@ var bosses = []
 var current_route: String = ""
 var next_route: String = ""
 
+var can_attack = false
+var can_move = false
+
 signal players_changed
 signal player_damaged
 signal player_healed
