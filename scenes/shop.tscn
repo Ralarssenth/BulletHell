@@ -17,7 +17,7 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2cwa5"]
 size = Vector2(264, 276)
 
-[node name="Node2D" type="Node2D" groups=["room"]]
+[node name="Shop" type="Node2D" groups=["room"]]
 show_behind_parent = true
 position = Vector2(1009, 551)
 script = ExtResource("1_hiyuo")

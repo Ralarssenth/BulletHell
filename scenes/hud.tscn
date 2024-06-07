@@ -6,11 +6,24 @@
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1_mcw2y")
 
-[node name="Healthbar" parent="." instance=ExtResource("1_l6iip")]
-position = Vector2(8, 817)
-scale = Vector2(0.4, 0.4)
-
 [node name="BossProgressBar" type="ProgressBar" parent="."]
-offset_left = 2.0
-offset_right = 1914.0
-offset_bottom = 45.0
+offset_left = 7.0
+offset_top = 7.0
+offset_right = 1912.0
+offset_bottom = 34.0
+
+[node name="Healthbar" parent="." instance=ExtResource("1_l6iip")]
+visible = false
+position = Vector2(76, 1043)
+
+[node name="Healthbar2" parent="." instance=ExtResource("1_l6iip")]
+visible = false
+position = Vector2(557, 1042)
+
+[node name="Healthbar3" parent="." instance=ExtResource("1_l6iip")]
+visible = false
+position = Vector2(1052, 1043)
+
+[node name="Healthbar4" parent="." instance=ExtResource("1_l6iip")]
+visible = false
+position = Vector2(1524, 1043)

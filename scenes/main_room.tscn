@@ -1,11 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://r7y4x6ei8c6b"]
+[gd_scene load_steps=9 format=3 uid="uid://r7y4x6ei8c6b"]
 
 [ext_resource type="Script" path="res://scripts/main_room.gd" id="1_k2rdj"]
 [ext_resource type="PackedScene" uid="uid://du41pc5lmlpv" path="res://scenes/hud.tscn" id="2_efmdk"]
 [ext_resource type="PackedScene" uid="uid://cgtroki4uub7i" path="res://scenes/dummy.tscn" id="2_lgxio"]
 [ext_resource type="PackedScene" uid="uid://bhuapbyawmuoo" path="res://scenes/fire_boss1.tscn" id="3_eqjao"]
 [ext_resource type="PackedScene" uid="uid://bseavu62jtci7" path="res://scenes/shop.tscn" id="3_f5o1a"]
-[ext_resource type="PackedScene" uid="uid://0upble6y4iu6" path="res://scenes/player.tscn" id="3_gmdo7"]
 [ext_resource type="PackedScene" uid="uid://2kd7j8nf0edk" path="res://scenes/ready_area.tscn" id="4_6i3rr"]
 [ext_resource type="PackedScene" uid="uid://bibfo0qetxy16" path="res://scenes/fire_boss2.tscn" id="4_h5jx7"]
 [ext_resource type="PackedScene" uid="uid://cig5lwb7abnvv" path="res://scenes/fire_boss3.tscn" id="5_ediw3"]
@@ -21,11 +20,14 @@ fire_boss3_node = ExtResource("5_ediw3")
 [node name="ReadyArea" parent="." instance=ExtResource("4_6i3rr")]
 position = Vector2(1836, 319)
 
-[node name="Player" parent="." instance=ExtResource("3_gmdo7")]
-position = Vector2(359, 554)
-scale = Vector2(0.15, 0.15)
-
 [node name="Dummy" parent="." instance=ExtResource("2_lgxio")]
 position = Vector2(990, 550)
 
 [node name="HUD" parent="." instance=ExtResource("2_efmdk")]
+
+[node name="Players" type="Node2D" parent="."]
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://scenes/player.tscn")
+spawn_path = NodePath("../Players")
+spawn_limit = 4

@@ -7,33 +7,34 @@
 [ext_resource type="Texture2D" uid="uid://7tuydk1vohe5" path="res://assets/player/head.png" id="4_x8sgt"]
 
 [node name="Healthbar" type="Node2D"]
+scale = Vector2(0.5, 0.5)
 script = ExtResource("1_vqihi")
 
 [node name="PortaitHolder" type="Sprite2D" parent="."]
-position = Vector2(77.5, 570)
+position = Vector2(0.5, 4)
 texture = ExtResource("1_54kix")
 
 [node name="HealthBar" type="Sprite2D" parent="."]
-position = Vector2(453.5, 571)
+position = Vector2(376.5, 5)
 texture = ExtResource("2_yp0d6")
 
 [node name="HealthPip" type="Sprite2D" parent="."]
-position = Vector2(217.5, 570)
+position = Vector2(140.5, 4)
 texture = ExtResource("3_ekm0j")
 
 [node name="HealthPip2" type="Sprite2D" parent="."]
-position = Vector2(376.5, 570)
+position = Vector2(299.5, 4)
 texture = ExtResource("3_ekm0j")
 
 [node name="HealthPip3" type="Sprite2D" parent="."]
-position = Vector2(535.5, 570)
+position = Vector2(458.5, 4)
 texture = ExtResource("3_ekm0j")
 
 [node name="HealthPip4" type="Sprite2D" parent="."]
-position = Vector2(694.5, 570)
+position = Vector2(617.5, 4)
 texture = ExtResource("3_ekm0j")
 
 [node name="Head" type="Sprite2D" parent="."]
-position = Vector2(75, 568)
+position = Vector2(-2, 2)
 scale = Vector2(0.3, 0.3)
 texture = ExtResource("4_x8sgt")

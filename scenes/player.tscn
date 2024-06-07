@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://0upble6y4iu6"]
+[gd_scene load_steps=30 format=3 uid="uid://0upble6y4iu6"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_48mg1"]
 [ext_resource type="Texture2D" uid="uid://c8vt5dpwcaq34" path="res://assets/player/armBack.png" id="1_f12gu"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://byuviv3mdr0pe" path="res://assets/player/torso.png" id="3_ubn8w"]
 [ext_resource type="PackedScene" uid="uid://bf0ceon2od7sf" path="res://scenes/player_bullet.tscn" id="3_wynmc"]
 [ext_resource type="Texture2D" uid="uid://7tuydk1vohe5" path="res://assets/player/head.png" id="4_8dcyw"]
+[ext_resource type="Script" path="res://scripts/player_input.gd" id="4_ekqwf"]
 [ext_resource type="Texture2D" uid="uid://dn3vltlxxv0k2" path="res://assets/player/legFront.png" id="5_h6d54"]
 [ext_resource type="Texture2D" uid="uid://bt64yvgv4a1ke" path="res://assets/player/armFront.png" id="6_rqt5e"]
 [ext_resource type="Texture2D" uid="uid://c1r6pj5yksvu" path="res://assets/player/donut.png" id="8_5o2e1"]
@@ -16,6 +17,19 @@
 [ext_resource type="Texture2D" uid="uid://cjql4yj0v6g7e" path="res://assets/player/attack2Button.png" id="14_ixbpu"]
 [ext_resource type="Texture2D" uid="uid://bjccsac6ycahr" path="res://assets/player/attack3Button.png" id="15_fdkj7"]
 [ext_resource type="Texture2D" uid="uid://g1buc5dhtjqu" path="res://assets/player/defensiveButton.png" id="16_s6eu5"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_gkiod"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:player")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_6efnp"]
+properties/0/path = NodePath("PlayerInput:direction")
+properties/0/spawn = true
+properties/0/replication_mode = 1
 
 [sub_resource type="Animation" id="Animation_maaag"]
 length = 0.001
@@ -304,9 +318,18 @@ _data = {
 radius = 58.0086
 
 [node name="Player" type="Area2D" groups=["player"]]
+position = Vector2(1030, 488)
+scale = Vector2(0.2, 0.2)
 script = ExtResource("1_48mg1")
 player_aoe_attack_node = ExtResource("2_8qw23")
 player_bullet_node = ExtResource("3_wynmc")
+
+[node name="ServerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_gkiod")
+
+[node name="PlayerInput" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_6efnp")
+script = ExtResource("4_ekqwf")
 
 [node name="Parts" type="Node2D" parent="."]
 
@@ -417,4 +440,6 @@ texture_under = ExtResource("16_s6eu5")
 texture_progress = ExtResource("13_xan6u")
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="tree_exiting" from="." to="." method="_on_tree_exiting"]
+[connection signal="toggle_tight" from="PlayerInput" to="." method="toggle_tight"]
 [connection signal="timeout" from="InvulnTimer" to="." method="_on_invuln_timer_timeout"]

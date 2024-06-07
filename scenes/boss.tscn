@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bahxyclakwvh0"]
+[gd_scene load_steps=11 format=3 uid="uid://bahxyclakwvh0"]
 
 [ext_resource type="Script" path="res://scripts/boss.gd" id="1_6ed73"]
 [ext_resource type="Texture2D" uid="uid://d2ahkke5dskye" path="res://assets/bosses/bossHitbox.png" id="1_rrjr4"]
@@ -47,6 +47,14 @@ _data = {
 "targeted": SubResource("Animation_qnbsa")
 }
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_573x3"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath("CollisionShape2D/TextureProgressBar:value")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
 [node name="Boss" type="Area2D" groups=["boss"]]
 script = ExtResource("1_6ed73")
 
@@ -93,6 +101,9 @@ libraries = {
 
 [node name="AttackTimer" type="Timer" parent="."]
 one_shot = true
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_573x3")
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
 [connection signal="tree_exiting" from="." to="." method="_on_tree_exiting"]

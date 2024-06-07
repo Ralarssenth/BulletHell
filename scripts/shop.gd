@@ -1,7 +1,5 @@
 extends Node2D
 
-var player
-var player_in_shop = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -13,27 +11,16 @@ func _process(delta):
 	pass
 
 func _input(event):
-	if event.is_action_pressed("select") and player_in_shop:
-		player.can_move = false
-		player.can_attack = false
+	if event.is_action_pressed("select"):
+		Globals.players[0].can_move = false
+		Globals.players[0].can_attack = false
 		$ShopScreen.set_visible(true)
 		$ShopScreen/MarginContainer/GridContainer/LeaveShopButton.grab_focus()
 
-func _on_shop_keeper_area_entered(area):
-	if area.is_in_group("player"):
-		print("shop entered by player: " + str(area))
-		player = area
-		player_in_shop = true
-		
-
-func _on_shop_keeper_area_exited(area):
-	if area.is_in_group("player"):
-		player_in_shop = false
-
 
 func _on_leave_shop_button_pressed():
-	player.can_move = true
-	player.can_attack = true
+	Globals.players[0].can_move = true
+	Globals.players[0].can_attack = true
 	$ShopScreen.set_visible(false)
 
 

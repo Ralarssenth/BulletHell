@@ -1,10 +1,20 @@
 extends Area2D
 
+# multiplayer id 
+# Set by the authority, synchronized on spawn.
+@export var player := 1 :
+	set(id):
+		player = id
+		# Give authority over the player input to the appropriate peer.
+		$PlayerInput.set_multiplayer_authority(id)
+
+
 # the player's attack node locations
 @export var player_aoe_attack_node: PackedScene
 @export var player_bullet_node: PackedScene
 
-# Player movement speed 
+# Player movement
+@onready var input = $PlayerInput
 const BASE_SPEED = 300.0
 var current_speed = 300.0
 var speed = 300.0
@@ -18,8 +28,6 @@ var can_move = false
 
 # Targeting
 var current_target = self
-signal iterate_target
-signal update_target
 
 
 # Attack stats
@@ -38,11 +46,13 @@ var tweens = [attack1_tween, attack2_tween, attack3_tween, defensive_tween]
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	Globals.player_died.connect(_on_player_died)
+	Globals.players.append(self)
 	# set the input state to true
 	can_attack = true
 	can_move = true
 	#set the initial target
 	current_target = self
+	Globals.players_changed.emit()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -53,29 +63,21 @@ func _process(delta):
 	
 	# attack input
 	if can_attack == true:
-		if Input.is_action_pressed("attack_1"):
+		if input.attack1:
 			attack1_shoot_bullet()
-		if Input.is_action_pressed("attack_2"):
+		if input.attack2:
 			attack2_aoe_ranged()
-		if Input.is_action_pressed("attack_3"):
+		if input.attack3:
 			attack3_aoe_self()
-		if Input.is_action_pressed("defensive"):
+		if input.defensive:
 			defensive()
-	
-
-func _input(event):
-	if event.is_action_pressed("shift"):
-		toggle_tight(true)
-	if event.is_action_released("shift"):
-		toggle_tight(false)
-		emit_signal("iterate_target")
 	
 
 
 # Get the input direction and handle the movement/deceleration.
 func move_and_animate(delta):
-	velocity.x = Input.get_axis("left", "right")
-	velocity.y = Input.get_axis("up", "down")
+	velocity.x = input.direction.x
+	velocity.y = input.direction.y
 	
 	# set the animation based on x movement
 	if velocity.x == 0:
@@ -280,3 +282,8 @@ func reset_cooldowns():
 	$InvulnTimer.stop()
 	$GCDTimer.stop()
 	$DefensiveCDTimer.stop()
+
+
+func _on_tree_exiting():
+	Globals.players.erase(self)
+	Globals.players_changed.emit()

@@ -1,4 +1,7 @@
 extends Node2D
+
+var player: int
+
 const MAX_HEALTH:int = 4
 var current_health:int = 4
 
