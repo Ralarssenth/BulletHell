@@ -321,7 +321,6 @@ radius = 58.0086
 position = Vector2(1030, 488)
 scale = Vector2(0.2, 0.2)
 script = ExtResource("1_48mg1")
-player = null
 player_aoe_attack_node = ExtResource("2_8qw23")
 player_bullet_node = ExtResource("3_wynmc")
 
