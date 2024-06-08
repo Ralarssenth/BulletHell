@@ -120,7 +120,7 @@ func change_room_scene():
 		var tween = create_tween()
 		tween.tween_property(player,"position", (player.position - Vector2(1700.0, 0.0)), transition_timer).set_trans(Tween.TRANS_SINE)
 		player.reset_cooldowns()
-	Globals.can_attack = false #disallow inputs during transition
+		player.can_attack = false #disallow inputs during transition
 	
 	# Catch the waiting room before the match/case below so that the first route starts there
 	if Globals.current_route == "waiting":
@@ -193,7 +193,8 @@ func change_room_scene():
 		_:
 			print("change_boss defaulted at route choice")
 	
-	Globals.can_attack = true #reallow player inputs
+	for player in Globals.players:
+		player.can_attack = true #reallow player inputs
 	
 	# Check if we have returned to the waiting room and if so, reactivate the ready area
 	# this logic can move later when we add the player drop in/ drop out so that the 

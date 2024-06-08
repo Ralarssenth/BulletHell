@@ -7,8 +7,9 @@ extends MultiplayerSynchronizer
 @export var attack3 := false
 @export var defensive := false
 
+@onready var player = get_parent()
+
 signal toggle_tight(state)
-signal iterate_target
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -62,3 +63,5 @@ func _input(event):
 	if event.is_action_released("shift"):
 		toggle_tight.emit(false)
 		Globals.iterate_target.emit()
+	if event.is_action_pressed("select"):
+		Globals.player_select.emit(player)

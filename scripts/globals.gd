@@ -7,12 +7,10 @@ var bosses = []
 var current_route: String = ""
 var next_route: String = ""
 
-var can_attack = false
-var can_move = false
-
 signal players_changed
-signal player_damaged
-signal player_healed
+signal player_damaged(array_id)
+signal player_healed(array_id)
+signal player_select(player_node)
 signal player_died
 signal update_player_target
 signal iterate_target

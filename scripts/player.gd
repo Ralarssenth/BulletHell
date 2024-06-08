@@ -7,7 +7,7 @@ extends Area2D
 		player = id
 		# Give authority over the player input to the appropriate peer.
 		$PlayerInput.set_multiplayer_authority(id)
-
+var player_array_id : int
 
 # the player's attack node locations
 @export var player_aoe_attack_node: PackedScene
@@ -23,7 +23,8 @@ var velocity = Vector2.ZERO
 #Player states
 enum MOVE_STATE {IDLE, FORWARD, BACKWARD}
 var current_move_state = MOVE_STATE.IDLE
-
+var can_attack = false
+var can_move = false
 
 # Targeting
 var current_target = self
@@ -46,9 +47,10 @@ var tweens = [attack1_tween, attack2_tween, attack3_tween, defensive_tween]
 func _ready():
 	Globals.player_died.connect(_on_player_died)
 	Globals.players.append(self)
+	player_array_id = Globals.players.find(self)
 	# set the input state to true
-	Globals.can_attack = true
-	Globals.can_move = true
+	can_attack = true
+	can_move = true
 	#set the initial target
 	current_target = self
 	Globals.players_changed.emit()
@@ -57,11 +59,11 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	# movement input
-	if Globals.can_move == true:
+	if can_move == true:
 		move_and_animate(delta)
 	
 	# attack input
-	if Globals.can_attack == true:
+	if can_attack == true:
 		if input.attack1:
 			attack1_shoot_bullet()
 		if input.attack2:
@@ -130,7 +132,7 @@ func _on_area_entered(area):
 func damaged():
 	if $InvulnTimer.is_stopped():
 		print("player took damage")
-		Globals.player_damaged.emit()
+		Globals.player_damaged.emit(Globals.players.find(self))
 	
 		# give the player 1.0s of invuln
 		invuln(1.0, "damaged")

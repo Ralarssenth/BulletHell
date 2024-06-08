@@ -17,15 +17,8 @@ func _process(delta):
 	pass
 
 
-func _on_player_damaged():
-	current_health -= 1
-	update_ui()
-	if current_health <= 0:
-		emit_signal("player_died")
-	
 
-
-func update_ui():
+func update_pips():
 	for i in range(pips.size()):
 		if i >= current_health:
 			pips[i].set_visible(false)
@@ -34,6 +27,20 @@ func update_ui():
 		
 
 
-func _on_player_healed():
-	current_health = MAX_HEALTH
-	update_ui()
+func _on_player_damaged(_player):
+	if player == _player:
+		current_health -= 1
+		update_pips()
+		if current_health <= 0:
+			emit_signal("player_died")
+	
+
+
+func _on_player_healed(_player):
+	if player == _player:
+		current_health = MAX_HEALTH
+		update_pips()
+
+
+
+
