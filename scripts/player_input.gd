@@ -6,10 +6,9 @@ extends MultiplayerSynchronizer
 @export var attack2 := false
 @export var attack3 := false
 @export var defensive := false
+@export var tight := false
 
-@onready var player = get_parent()
 
-signal toggle_tight(state)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -31,6 +30,12 @@ func set_attack3_state(state):
 @rpc("call_local")
 func set_defensive_state(state):
 	defensive = state
+
+@rpc("call_local")
+func toggle_tight_hitbox(state):
+	tight = state
+
+
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -56,12 +61,10 @@ func _process(delta):
 		set_defensive_state.rpc(true)
 	else:
 		set_defensive_state.rpc(false)
+	
+	if Input.is_action_pressed("shift"):
+		toggle_tight_hitbox.rpc(true)
+	else:
+		toggle_tight_hitbox.rpc(false)
 
-func _input(event):
-	if event.is_action_pressed("shift"):
-		toggle_tight.emit(true)
-	if event.is_action_released("shift"):
-		toggle_tight.emit(false)
-		Globals.iterate_target.emit()
-	if event.is_action_pressed("select"):
-		Globals.player_select.emit(player.player_array_id)
+

@@ -15,6 +15,7 @@ func _ready():
 func _process(delta):
 	pass
 
+
 func update_boss_healthbar(_value, _max):
 	$BossProgressBar.value = _value
 	$BossProgressBar.max_value = _max
@@ -29,6 +30,6 @@ func hide_boss_healthbar():
 func _on_player_count_updated():
 	for bar in player_healthbars:
 		bar.set_visible(false)
-	for i in range(Globals.players.size()):
+	for i in range(get_tree().get_nodes_in_group("player").size()):
 		player_healthbars[i].set_visible(true)
 

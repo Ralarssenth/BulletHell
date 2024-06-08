@@ -43,7 +43,7 @@ offset_left = -41.0
 offset_top = 105.0
 offset_right = 122.0
 offset_bottom = 128.0
-text = "Press 'Select' to Shop"
+text = "Press 'R' to Shop"
 
 [node name="ShopScreen" type="ColorRect" parent="."]
 visible = false

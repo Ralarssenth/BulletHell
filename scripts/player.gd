@@ -23,8 +23,8 @@ var velocity = Vector2.ZERO
 #Player states
 enum MOVE_STATE {IDLE, FORWARD, BACKWARD}
 var current_move_state = MOVE_STATE.IDLE
-var can_attack = false
-var can_move = false
+@export var can_attack = false
+@export var can_move = false
 
 # Targeting
 var current_target = self
@@ -46,8 +46,20 @@ var tweens = [attack1_tween, attack2_tween, attack3_tween, defensive_tween]
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	Globals.player_died.connect(_on_player_died)
-	Globals.players.append(self)
-	player_array_id = Globals.players.find(self)
+	Globals.toggle_player_inputs.connect(_toggle_player_inputs)
+	
+	# Add the client's unique multiplayer id to the peers list
+	Globals.peers.append(player)
+	
+	#logging the id setups
+	print("player array id is: " + str(player_array_id))
+	print("player unique id is: " + str(player))
+	print("current content of peers array is: ")
+	for peer in Globals.peers:
+		print(str(peer))
+	
+	
+		
 	# set the input state to true
 	can_attack = true
 	can_move = true
@@ -72,7 +84,6 @@ func _process(delta):
 			attack3_aoe_self()
 		if input.defensive:
 			defensive()
-	
 
 
 # Get the input direction and handle the movement/deceleration.
@@ -87,6 +98,9 @@ func move_and_animate(delta):
 		set_move_state(MOVE_STATE.FORWARD)
 	elif velocity.x < 0: 
 		set_move_state(MOVE_STATE.BACKWARD)
+	
+	# Check for tight toggle BEFORE calculating velocity
+	toggle_tight(input.tight)
 	
 	# Normalize the velocity vector so that diagonal movement is not faster
 	# and multiply it by the speed
@@ -120,6 +134,10 @@ func toggle_tight(on):
 		else:
 			speed = current_speed
 
+func _toggle_player_inputs(_id, state):
+	if _id == player:
+		can_attack = state
+		can_move = state
 
 func _on_area_entered(area):
 	print("player area entered")
@@ -286,5 +304,4 @@ func reset_cooldowns():
 
 
 func _on_tree_exiting():
-	Globals.players.erase(self)
 	Globals.players_changed.emit()

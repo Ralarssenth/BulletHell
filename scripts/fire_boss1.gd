@@ -2,6 +2,7 @@ extends "res://scripts/boss.gd"
 
 var cycle_count: int = 0
 
+
 # Called from superclass's ready function.
 # Used to add to the ready function instead of overload/replace it
 func setup():
@@ -31,12 +32,12 @@ func _on_attack_timer_timeout():
 	await get_tree().create_timer(movement_timer + buffer_timer).timeout
 	
 	#print("cycle count: " + str(cycle_count))
-	#print("players array size: " + str(Globals.players.size()))
 	
-	if cycle_count < Globals.players.size():
+	
+	if cycle_count < players.size():
 		for i in range(0,4):
 			#print("i: " + str(i))
-			AttackSpawner.spawn_pointBlank(Globals.players[cycle_count].position, 200.0, 2.0, 1.0, get_tree().root)
+			AttackSpawner.spawn_pointBlank(players[cycle_count].position, 200.0, 2.0, 1.0, get_tree().root)
 			await get_tree().create_timer(0.5).timeout
 			i += 1
 		cycle_count += 1

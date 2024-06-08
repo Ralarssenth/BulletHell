@@ -20,7 +20,7 @@ func _on_area_entered(area):
 		$TimerLabel.set_visible(true)
 		players_ready += 1
 		
-		if players_ready >= Globals.players.size():
+		if players_ready >= get_tree().get_nodes_in_group("player").size():
 			$TimerLabel.text = str(timer_counter) + "...!"
 			$Timer.start(1.0)
 

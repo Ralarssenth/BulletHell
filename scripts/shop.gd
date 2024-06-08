@@ -1,39 +1,53 @@
 extends Node2D
 
-var player_id
+var peer_id := 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	Globals.player_select.connect(_on_player_select)
 	$ShopScreen.set_visible(false)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	pass
+	get_input()
 
-
+func get_input():
+	if Input.is_action_just_pressed("select"):
+		open_shop.rpc()
 		
-func _on_player_select(_player_id):
-	player_id = _player_id
-	print("shopping player id now set to: " + str(player_id))
-	var player = Globals.players[player_id]
-	player.can_move = false
-	player.can_attack = false
-	$ShopScreen.set_visible(true)
-	$ShopScreen/MarginContainer/GridContainer/LeaveShopButton.grab_focus()
+
+
+@rpc("any_peer", "call_local")
+func open_shop():
+	peer_id = multiplayer.get_remote_sender_id()
+	print("player peer id is: " + str(peer_id))
+	
+	Globals.toggle_player_inputs.emit(peer_id, false)
+	
+	# only toggle the shop screen locally, even when hosting
+	if peer_id == multiplayer.get_unique_id():
+		$ShopScreen.set_visible(true)
+		$ShopScreen/MarginContainer/GridContainer/LeaveShopButton.grab_focus()
+
+
 
 func _on_leave_shop_button_pressed():
-	var player = Globals.players[player_id]
-	$ShopScreen.set_visible(false)
-	await get_tree().create_timer(0.5).timeout
-	player.can_move = true
-	player.can_attack = true
+	leave_shop.rpc()
 	
+	
+@rpc("any_peer", "call_local")
+func leave_shop():
+	peer_id = multiplayer.get_remote_sender_id()
+	
+	Globals.toggle_player_inputs.emit(peer_id, true)
+	
+	# only toggle the shop screen locally, even when hosting
+	if peer_id == multiplayer.get_unique_id():
+		$ShopScreen.set_visible(false)
 
 
 func _on_heal_pressed():
-	Globals.player_healed.emit(player_id)
+	Globals.player_healed.emit(peer_id)
 
 
 

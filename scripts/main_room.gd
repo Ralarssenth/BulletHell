@@ -49,6 +49,7 @@ func _process(delta):
 # This section is multiplayer functions 
 # from https://godotengine.org/article/multiplayer-in-godot-4-0-scene-replication/
 func add_player(id: int):
+	# Set the player's controller character
 	var character = preload("res://scenes/player.tscn").instantiate()
 	# Set player id.
 	character.player = id
@@ -56,12 +57,17 @@ func add_player(id: int):
 	character.position = Vector2(660.0, 540.0)
 	character.name = str(id)
 	$Players.add_child(character, true)
+	
+	$Players.players[id] = character
+	character.player_array_id = $Players.players.size() - 1
 	Globals.players_changed.emit()
 
 func del_player(id: int):
 	if not $Players.has_node(str(id)):
 		return
 	$Players.get_node(str(id)).queue_free()
+	
+	$Players.players.erase(id)
 	Globals.players_changed.emit()
 	
 
@@ -70,7 +76,6 @@ func _exit_tree():
 		return
 	multiplayer.peer_connected.disconnect(add_player)
 	multiplayer.peer_disconnected.disconnect(del_player)
-
 
 
 
@@ -116,7 +121,8 @@ func change_room_scene():
 	
 	
 	# Tween the player's position back to the left side and reset their cd's
-	for player in Globals.players:
+	for player_id in $Players.players:
+		var player = $Players.get_node(str(player_id))
 		var tween = create_tween()
 		tween.tween_property(player,"position", (player.position - Vector2(1700.0, 0.0)), transition_timer).set_trans(Tween.TRANS_SINE)
 		player.reset_cooldowns()
@@ -132,17 +138,14 @@ func change_room_scene():
 		"fire":
 			match room_counter:
 				0:
-					next_boss_instance = fire_boss1_node.instantiate()
+					next_boss_instance = shop_node.instantiate()
 					room_counter += 1
-					
-					Globals.next_route = "waiting"
-					
 					# Wait for the player transition and then add the next boss instance to the scene tree
 					# (May have to adjust where this goes for multibosses)
-					next_boss_instance.position = Globals.BOSS_START_SPOT #put the boss in the starting position
+					
 					await get_tree().create_timer(transition_timer + 1.0).timeout
 					get_tree().current_scene.call_deferred("add_child", next_boss_instance)
-					Globals.bosses.append(next_boss_instance) # Fill the bosses array
+					$ReadyArea.activate(true) # Reactivate the ready area
 					
 				1:
 					next_boss_instance = fire_boss2_node.instantiate()
@@ -165,14 +168,17 @@ func change_room_scene():
 					Globals.bosses.append(next_boss_instance) # Fill the bosses array
 					
 				3:
-					next_boss_instance = shop_node.instantiate()
+					next_boss_instance = fire_boss1_node.instantiate()
 					room_counter += 1
+					
+					Globals.next_route = "waiting"
+					
 					# Wait for the player transition and then add the next boss instance to the scene tree
 					# (May have to adjust where this goes for multibosses)
-					
+					next_boss_instance.position = Globals.BOSS_START_SPOT #put the boss in the starting position
 					await get_tree().create_timer(transition_timer + 1.0).timeout
 					get_tree().current_scene.call_deferred("add_child", next_boss_instance)
-					$ReadyArea.activate(true) # Reactivate the ready area
+					Globals.bosses.append(next_boss_instance) # Fill the bosses array
 					
 				4:
 					next_boss_instance = waiting_room.instantiate()
@@ -193,7 +199,8 @@ func change_room_scene():
 		_:
 			print("change_boss defaulted at route choice")
 	
-	for player in Globals.players:
+	for player_id in $Players.players:
+		var player = $Players.get_node(str(player_id))
 		player.can_attack = true #reallow player inputs
 	
 	# Check if we have returned to the waiting room and if so, reactivate the ready area

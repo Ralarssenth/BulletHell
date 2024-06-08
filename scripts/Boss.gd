@@ -3,10 +3,13 @@ extends Area2D
 var max_health = 100.0
 var current_health = 100.0
 
+var players = []
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	$CollisionShape2D/TextureProgressBar.max_value = max_health
 	$CollisionShape2D/TextureProgressBar.value = current_health
+	players = get_tree().get_nodes_in_group("player")
 	setup()
 
 func setup():
