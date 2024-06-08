@@ -43,7 +43,7 @@ func _on_attack_timer_timeout():
 		$AttackTimer.start(2.5)
 	else:
 		AttackSpawner.spawn_pointBlank(Vector2(0.0, 0.0), 250.0, 3.0, 1.0, self)
-		cycle_count = 0
+		cycle_count += 1
 		$AttackTimer.start(4.5)
 	
 	

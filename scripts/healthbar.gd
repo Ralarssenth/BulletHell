@@ -1,6 +1,6 @@
 extends Node2D
 
-var player: int
+var player_id: int
 
 const MAX_HEALTH:int = 4
 var current_health:int = 4
@@ -27,8 +27,8 @@ func update_pips():
 		
 
 
-func _on_player_damaged(_player):
-	if player == _player:
+func _on_player_damaged(_player_id):
+	if player_id == _player_id:
 		current_health -= 1
 		update_pips()
 		if current_health <= 0:
@@ -36,8 +36,8 @@ func _on_player_damaged(_player):
 	
 
 
-func _on_player_healed(_player):
-	if player == _player:
+func _on_player_healed(_player_id):
+	if player_id == _player_id:
 		current_health = MAX_HEALTH
 		update_pips()
 

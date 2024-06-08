@@ -64,4 +64,4 @@ func _input(event):
 		toggle_tight.emit(false)
 		Globals.iterate_target.emit()
 	if event.is_action_pressed("select"):
-		Globals.player_select.emit(player)
+		Globals.player_select.emit(player.player_array_id)

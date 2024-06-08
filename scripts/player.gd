@@ -132,7 +132,7 @@ func _on_area_entered(area):
 func damaged():
 	if $InvulnTimer.is_stopped():
 		print("player took damage")
-		Globals.player_damaged.emit(Globals.players.find(self))
+		Globals.player_damaged.emit(player_array_id)
 	
 		# give the player 1.0s of invuln
 		invuln(1.0, "damaged")

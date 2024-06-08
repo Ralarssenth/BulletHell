@@ -10,7 +10,7 @@ var next_route: String = ""
 signal players_changed
 signal player_damaged(array_id)
 signal player_healed(array_id)
-signal player_select(player_node)
+signal player_select(array_id)
 signal player_died
 signal update_player_target
 signal iterate_target

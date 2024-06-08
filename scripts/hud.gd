@@ -7,7 +7,7 @@ func _ready():
 	Globals.boss_damaged.connect(update_boss_healthbar)
 	Globals.players_changed.connect(_on_player_count_updated)
 	for i in range(player_healthbars.size()):
-		player_healthbars[i].player = i
+		player_healthbars[i].player_id = i
 		i += 1
 
 

@@ -40,7 +40,7 @@ func _on_area_exited(area):
 func _on_timer_timeout():
 	timer_counter -= 1
 	if timer_counter > 0:
-		$TimerLabel.text = str(timer_counter) + "...!"
+		$TimerLabel.text = str(timer_counter) + "..."
 		$Timer.start(1.0)
 	else:
 		emit_signal("change_room_scene")
