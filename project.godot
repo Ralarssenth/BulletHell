@@ -17,7 +17,7 @@ config/icon="res://assets/bosses/icon.svg"
 
 [autoload]
 
-Globals="*res://scripts/Globals.gd"
+Globals="*res://scripts/globals.gd"
 AttackSpawner="*res://scripts/AttackSpawner.gd"
 
 [display]
