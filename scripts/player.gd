@@ -9,6 +9,13 @@ extends Area2D
 		$PlayerInput.set_multiplayer_authority(id)
 var player_array_id : int
 
+# The player's sprite options, 
+# by "color" as listed in the match/case in the change color function
+var head_sprites = {
+	"default": load("res://assets/player/head.png"), 
+	"red": load("res://assets/player/head_red.png")
+}
+
 # the player's attack node locations
 @export var player_aoe_attack_node: PackedScene
 @export var player_bullet_node: PackedScene
@@ -47,6 +54,7 @@ var tweens = [attack1_tween, attack2_tween, attack3_tween, defensive_tween]
 func _ready():
 	Globals.player_died.connect(_on_player_died)
 	Globals.toggle_player_inputs.connect(_toggle_player_inputs)
+	Globals.set_player_color.connect(_change_color)
 	
 	# Add the client's unique multiplayer id to the peers list
 	Globals.peers.append(player)
@@ -109,7 +117,8 @@ func move_and_animate(delta):
 	
 	# move to the new position based on the velocity
 	position += velocity * delta
-
+	position.x = clamp(position.x, 10, 1910)
+	position.y = clamp(position.y, 10, 1070)
 
 # Checks the current animation and plays a new one if it has changed
 func set_move_state(state):
@@ -138,6 +147,11 @@ func _toggle_player_inputs(_id, state):
 	if _id == player:
 		can_attack = state
 		can_move = state
+
+func _change_color(_id, color):
+	if _id == player:
+		$Parts/Head.set_texture(head_sprites[color])
+
 
 func _on_area_entered(area):
 	print("player area entered")

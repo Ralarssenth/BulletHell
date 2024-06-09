@@ -1,0 +1,103 @@
+[gd_scene load_steps=7 format=3 uid="uid://dex8px5fn0wie"]
+
+[ext_resource type="Script" path="res://scripts/waiting_room_menu.gd" id="1_bkv2c"]
+[ext_resource type="Texture2D" uid="uid://bcy375kn01bcm" path="res://assets/HUD/shop_button_1.png" id="2_nk882"]
+[ext_resource type="Texture2D" uid="uid://c3ry2gh0gsotl" path="res://assets/HUD/shop_button_1_pressed.png" id="3_kleyn"]
+[ext_resource type="Texture2D" uid="uid://bhudyh51d1s4i" path="res://assets/HUD/shop_button_focused.png" id="4_kmrbn"]
+[ext_resource type="Texture2D" uid="uid://0ijfu5wnvbty" path="res://assets/HUD/shop_button_defensive.png" id="5_7ce3e"]
+[ext_resource type="Texture2D" uid="uid://x0jsg4j33rh2" path="res://assets/HUD/shop_button_defensive_pressed.png" id="6_dvehw"]
+
+[node name="Menu" type="ColorRect"]
+top_level = true
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -406.0
+offset_top = -231.0
+offset_right = 408.0
+offset_bottom = 239.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0.34902, 0.521569, 1)
+script = ExtResource("1_bkv2c")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 0
+offset_right = 815.0
+offset_bottom = 471.0
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 25
+theme_override_constants/margin_bottom = 25
+
+[node name="GridContainer" type="GridContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/h_separation = 15
+theme_override_constants/v_separation = 15
+columns = 4
+
+[node name="TextureButton" type="TextureButton" parent="MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
+texture_normal = ExtResource("2_nk882")
+texture_pressed = ExtResource("3_kleyn")
+texture_focused = ExtResource("4_kmrbn")
+
+[node name="TextureButton2" type="TextureButton" parent="MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
+texture_focused = ExtResource("4_kmrbn")
+
+[node name="TextureButton3" type="TextureButton" parent="MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
+texture_focused = ExtResource("4_kmrbn")
+
+[node name="TextureButton4" type="TextureButton" parent="MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
+texture_focused = ExtResource("4_kmrbn")
+
+[node name="TextureButton5" type="TextureButton" parent="MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
+texture_focused = ExtResource("4_kmrbn")
+
+[node name="TextureButton6" type="TextureButton" parent="MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
+texture_focused = ExtResource("4_kmrbn")
+
+[node name="TextureButton7" type="TextureButton" parent="MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
+texture_focused = ExtResource("4_kmrbn")
+
+[node name="TextureButton8" type="TextureButton" parent="MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
+texture_normal = ExtResource("5_7ce3e")
+texture_pressed = ExtResource("6_dvehw")
+texture_focused = ExtResource("4_kmrbn")
+
+[node name="ColorRect" type="ColorRect" parent="MarginContainer/GridContainer"]
+layout_mode = 2
+color = Color(1, 1, 1, 0)
+
+[node name="ColorRect2" type="ColorRect" parent="MarginContainer/GridContainer"]
+layout_mode = 2
+color = Color(1, 1, 1, 0)
+
+[node name="ColorRect3" type="ColorRect" parent="MarginContainer/GridContainer"]
+layout_mode = 2
+color = Color(1, 1, 1, 0)
+
+[node name="LeaveMenuButton" type="Button" parent="MarginContainer/GridContainer"]
+layout_mode = 2
+text = "Return"
+
+[connection signal="pressed" from="MarginContainer/GridContainer/TextureButton" to="." method="_on_texture_button_pressed"]
+[connection signal="pressed" from="MarginContainer/GridContainer/TextureButton8" to="." method="_on_texture_button_8_pressed"]
+[connection signal="pressed" from="MarginContainer/GridContainer/LeaveMenuButton" to="." method="_on_leave_menu_button_pressed"]

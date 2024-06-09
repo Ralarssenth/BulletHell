@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://cgtroki4uub7i"]
+[gd_scene load_steps=10 format=3 uid="uid://cgtroki4uub7i"]
 
 [ext_resource type="Script" path="res://scripts/dummy.gd" id="1_jfxju"]
 [ext_resource type="Texture2D" uid="uid://d2ahkke5dskye" path="res://assets/bosses/bossHitbox.png" id="2_ssmbc"]
 [ext_resource type="Texture2D" uid="uid://bqlna4py45yw1" path="res://assets/bosses/bossHitboxHealth.png" id="3_h77iy"]
 [ext_resource type="Texture2D" uid="uid://bf4n407w1eenh" path="res://assets/bosses/icon.svg" id="4_a0uba"]
 [ext_resource type="Texture2D" uid="uid://drbc2cymgoa0i" path="res://assets/bosses/targetCircle.png" id="5_3hhqy"]
+[ext_resource type="PackedScene" uid="uid://dex8px5fn0wie" path="res://scenes/in_game_menu.tscn" id="6_kh6jd"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_7hjjc"]
 radius = 236.053
@@ -32,6 +33,7 @@ _data = {
 }
 
 [node name="Dummy" type="Area2D" groups=["boss", "room"]]
+position = Vector2(1022, 550)
 script = ExtResource("1_jfxju")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -87,6 +89,8 @@ offset_right = 30.0
 offset_bottom = -103.0
 text = "DPS: 0.0"
 horizontal_alignment = 1
+
+[node name="Menu" parent="." instance=ExtResource("6_kh6jd")]
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
 [connection signal="tree_exiting" from="." to="." method="_on_tree_exiting"]

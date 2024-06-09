@@ -10,7 +10,8 @@ var current_route: String = ""
 var next_route: String = ""
 
 signal players_changed
-signal toggle_player_inputs(array_id, state)
+signal set_player_color(peer_id, color)
+signal toggle_player_inputs(peer_id, state)
 signal player_damaged(array_id)
 signal player_healed(array_id)
 signal player_died
