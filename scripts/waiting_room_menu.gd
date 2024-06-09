@@ -19,7 +19,9 @@ func open_menu():
 	var peer_id = multiplayer.get_remote_sender_id()
 	print("player peer id is: " + str(peer_id))
 	
+	Globals.move_player.emit(peer_id, Vector2(250, 540))
 	Globals.toggle_player_inputs.emit(peer_id, false)
+	
 	
 	# only toggle the shop screen locally, even when hosting
 	if peer_id == multiplayer.get_unique_id():
@@ -45,6 +47,7 @@ func leave_menu():
 func set_player_color(color):
 	var peer_id = multiplayer.get_remote_sender_id()
 	Globals.set_player_color.emit(peer_id, color)
+	
 
 # This section hooks all the buttons up to the set_player_color function
 

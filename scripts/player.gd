@@ -54,6 +54,7 @@ var tweens = [attack1_tween, attack2_tween, attack3_tween, defensive_tween]
 func _ready():
 	Globals.player_died.connect(_on_player_died)
 	Globals.toggle_player_inputs.connect(_toggle_player_inputs)
+	Globals.move_player.connect(_get_moved)
 	Globals.set_player_color.connect(_change_color)
 	
 	# Add the client's unique multiplayer id to the peers list
@@ -147,6 +148,10 @@ func _toggle_player_inputs(_id, state):
 	if _id == player:
 		can_attack = state
 		can_move = state
+
+func _get_moved(_id, _position):
+	if _id == player:
+		position = _position
 
 func _change_color(_id, color):
 	if _id == player:
