@@ -3,7 +3,7 @@ extends Node2D
 var player_id: int
 
 const MAX_HEALTH:int = 4
-var current_health:int = 4
+@export var current_health:int = 4
 
 @onready var pips = [$HealthPip, $HealthPip2, $HealthPip3, $HealthPip4]
 

@@ -142,14 +142,17 @@ func change_room_scene():
 		"fire":
 			match room_counter:
 				0:
-					next_boss_instance = shop_node.instantiate()
+					next_boss_instance = fire_boss1_node.instantiate()
 					room_counter += 1
+					
+					Globals.next_route = "waiting"
+					
 					# Wait for the player transition and then add the next boss instance to the scene tree
 					# (May have to adjust where this goes for multibosses)
-					
+					next_boss_instance.position = Globals.BOSS_START_SPOT #put the boss in the starting position
 					await get_tree().create_timer(transition_timer + 1.0).timeout
 					get_tree().current_scene.call_deferred("add_child", next_boss_instance)
-					$ReadyArea.activate(true) # Reactivate the ready area
+					Globals.bosses.append(next_boss_instance) # Fill the bosses array
 					
 				1:
 					next_boss_instance = fire_boss2_node.instantiate()
@@ -172,17 +175,14 @@ func change_room_scene():
 					Globals.bosses.append(next_boss_instance) # Fill the bosses array
 					
 				3:
-					next_boss_instance = fire_boss1_node.instantiate()
+					next_boss_instance = shop_node.instantiate()
 					room_counter += 1
-					
-					Globals.next_route = "waiting"
-					
 					# Wait for the player transition and then add the next boss instance to the scene tree
 					# (May have to adjust where this goes for multibosses)
-					next_boss_instance.position = Globals.BOSS_START_SPOT #put the boss in the starting position
+					
 					await get_tree().create_timer(transition_timer + 1.0).timeout
 					get_tree().current_scene.call_deferred("add_child", next_boss_instance)
-					Globals.bosses.append(next_boss_instance) # Fill the bosses array
+					$ReadyArea.activate(true) # Reactivate the ready area
 					
 				4:
 					next_boss_instance = waiting_room.instantiate()

@@ -1,6 +1,5 @@
 extends Node2D
 
-var peer_id := 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -19,7 +18,7 @@ func get_input():
 
 @rpc("any_peer", "call_local")
 func open_shop():
-	peer_id = multiplayer.get_remote_sender_id()
+	var peer_id = multiplayer.get_remote_sender_id()
 	print("player peer id is: " + str(peer_id))
 	
 	Globals.move_player.emit(peer_id, Vector2(960, 540))
@@ -38,7 +37,7 @@ func _on_leave_shop_button_pressed():
 	
 @rpc("any_peer", "call_local")
 func leave_shop():
-	peer_id = multiplayer.get_remote_sender_id()
+	var peer_id = multiplayer.get_remote_sender_id()
 	
 	Globals.toggle_player_inputs.emit(peer_id, true)
 	
@@ -48,7 +47,15 @@ func leave_shop():
 
 
 func _on_heal_pressed():
-	Globals.player_healed.emit(peer_id)
+	heal_player.rpc()
+
+@rpc("any_peer", "call_local")
+func heal_player():
+	var peer_id = multiplayer.get_remote_sender_id()
+	var players = get_tree().get_nodes_in_group("player")
+	for p in players:
+		if p.player == peer_id:
+			Globals.player_healed.emit(p.player_array_id)
 
 
 
