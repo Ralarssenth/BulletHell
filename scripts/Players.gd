@@ -1,4 +1,4 @@
 extends Node2D
 
 
-@export var players = {}
+@export var players = []

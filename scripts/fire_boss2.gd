@@ -27,12 +27,12 @@ func _on_attack_timer_timeout():
 	#print("cycle count: " + str(cycle_count))
 	#print("players array size: " + str(Globals.players.size()))
 	
-	tween.tween_property(self,"position:y", Globals.players[cycle_count].position.y, movement_timer).set_trans(Tween.TRANS_SINE)
+	tween.tween_property(self,"position:y", players[cycle_count].position.y, movement_timer).set_trans(Tween.TRANS_SINE)
 	await get_tree().create_timer(movement_timer).timeout
 	AttackSpawner.spawn_line_attack(self.position, AttackSpawner.HORIZONTAL_E, 2.0, 2.0, get_tree().root)
 
 	cycle_count += 1
-	if cycle_count >= Globals.players.size():
+	if cycle_count >= players.size():
 		cycle_count = 0
 		
 	$AttackTimer.start(2.0)

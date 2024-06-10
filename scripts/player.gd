@@ -7,7 +7,7 @@ extends Area2D
 		player = id
 		# Give authority over the player input to the appropriate peer.
 		$PlayerInput.set_multiplayer_authority(id)
-var player_array_id : int
+@export var player_array_id : int
 
 # The player's sprite options, 
 # by "color" as listed in the match/case in the change color function
@@ -57,23 +57,16 @@ func _ready():
 	Globals.move_player.connect(_get_moved)
 	Globals.set_player_color.connect(_change_color)
 	
-	# Add the client's unique multiplayer id to the peers list
-	Globals.peers.append(player)
-	
 	#logging the id setups
 	print("player array id is: " + str(player_array_id))
 	print("player unique id is: " + str(player))
-	print("current content of peers array is: ")
-	for peer in Globals.peers:
-		print(str(peer))
 	
-	
-		
 	# set the input state to true
 	can_attack = true
 	can_move = true
 	#set the initial target
 	current_target = self
+	draw_in_front(true)
 	Globals.players_changed.emit()
 
 
@@ -156,6 +149,13 @@ func _get_moved(_id, _position):
 func _change_color(_id, color):
 	if _id == player:
 		$Parts/Head.set_texture(head_sprites[color])
+
+
+func draw_in_front(state):
+	var peer_id = multiplayer.get_unique_id()
+	if peer_id == player:
+		top_level = state
+		print(str(peer_id) + "called to draw player" + str(player) + "in front")
 
 
 func _on_area_entered(area):

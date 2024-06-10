@@ -56,10 +56,14 @@ func add_player(id: int):
 	# Set starting character position.
 	character.position = Vector2(660.0, 540.0)
 	character.name = str(id)
+	
+	$Players.players.append(id)
+	character.player_array_id = $Players.players.find(id)
+	
 	$Players.add_child(character, true)
 	
-	$Players.players[id] = character
-	character.player_array_id = $Players.players.size() - 1
+	
+	
 	Globals.players_changed.emit()
 
 func del_player(id: int):

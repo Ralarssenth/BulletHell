@@ -2,8 +2,6 @@ extends Node
 
 const BOSS_START_SPOT = Vector2(2250, 650)
 
-var peers = []
-
 
 var bosses = []
 var current_route: String = ""
