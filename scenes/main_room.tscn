@@ -26,7 +26,9 @@ fire_boss3_node = ExtResource("5_ediw3")
 [node name="ReadyArea" parent="." instance=ExtResource("4_6i3rr")]
 position = Vector2(1836, 319)
 
-[node name="Dummy" parent="." instance=ExtResource("2_lgxio")]
+[node name="Bosses" type="Node" parent="."]
+
+[node name="Dummy" parent="Bosses" instance=ExtResource("2_lgxio")]
 position = Vector2(990, 550)
 
 [node name="HUD" parent="." instance=ExtResource("2_efmdk")]
@@ -37,7 +39,12 @@ script = ExtResource("9_youro")
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="Players"]
 replication_config = SubResource("SceneReplicationConfig_igrq8")
 
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+[node name="PlayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://scenes/player.tscn")
 spawn_path = NodePath("../Players")
 spawn_limit = 4
+
+[node name="BossSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://scenes/fire_boss1.tscn", "res://scenes/fire_boss2.tscn", "res://scenes/fire_boss3.tscn", "res://scenes/dummy.tscn", "res://scenes/shop.tscn")
+spawn_path = NodePath("../Bosses")
+spawn_limit = 1

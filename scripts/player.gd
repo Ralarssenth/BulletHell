@@ -57,6 +57,7 @@ func _ready():
 	Globals.move_player.connect(_get_moved)
 	Globals.set_player_color.connect(_change_color)
 	
+	
 	#logging the id setups
 	print("player array id is: " + str(player_array_id))
 	print("player unique id is: " + str(player))

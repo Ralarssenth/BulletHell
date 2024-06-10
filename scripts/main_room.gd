@@ -61,9 +61,7 @@ func add_player(id: int):
 	character.player_array_id = $Players.players.find(id)
 	
 	$Players.add_child(character, true)
-	
-	
-	
+
 	Globals.players_changed.emit()
 
 func del_player(id: int):
@@ -151,7 +149,7 @@ func change_room_scene():
 					# (May have to adjust where this goes for multibosses)
 					next_boss_instance.position = Globals.BOSS_START_SPOT #put the boss in the starting position
 					await get_tree().create_timer(transition_timer + 1.0).timeout
-					get_tree().current_scene.call_deferred("add_child", next_boss_instance)
+					$Bosses.call_deferred("add_child", next_boss_instance)
 					Globals.bosses.append(next_boss_instance) # Fill the bosses array
 					
 				1:
@@ -161,7 +159,7 @@ func change_room_scene():
 					# (May have to adjust where this goes for multibosses)
 					next_boss_instance.position = Globals.BOSS_START_SPOT #put the boss in the starting position
 					await get_tree().create_timer(transition_timer + 1.0).timeout
-					get_tree().current_scene.call_deferred("add_child", next_boss_instance)
+					$Bosses.call_deferred("add_child", next_boss_instance)
 					Globals.bosses.append(next_boss_instance) # Fill the bosses array
 				
 				2:
@@ -171,7 +169,7 @@ func change_room_scene():
 					# (May have to adjust where this goes for multibosses)
 					next_boss_instance.position = Globals.BOSS_START_SPOT #put the boss in the starting position
 					await get_tree().create_timer(transition_timer + 1.0).timeout
-					get_tree().current_scene.call_deferred("add_child", next_boss_instance)
+					$Bosses.call_deferred("add_child", next_boss_instance)
 					Globals.bosses.append(next_boss_instance) # Fill the bosses array
 					
 				3:
@@ -181,7 +179,7 @@ func change_room_scene():
 					# (May have to adjust where this goes for multibosses)
 					
 					await get_tree().create_timer(transition_timer + 1.0).timeout
-					get_tree().current_scene.call_deferred("add_child", next_boss_instance)
+					$Bosses.call_deferred("add_child", next_boss_instance)
 					$ReadyArea.activate(true) # Reactivate the ready area
 					
 				4:
@@ -195,7 +193,7 @@ func change_room_scene():
 					# (May have to adjust where this goes for multibosses)
 					next_boss_instance.position = Globals.BOSS_START_SPOT #put the boss in the starting position
 					await get_tree().create_timer(transition_timer + 1.0).timeout
-					get_tree().current_scene.call_deferred("add_child", next_boss_instance)
+					$Bosses.call_deferred("add_child", next_boss_instance)
 					Globals.bosses.append(next_boss_instance) # Fill the bosses array
 				_:
 					print("change_boss defaulted in fire route")
