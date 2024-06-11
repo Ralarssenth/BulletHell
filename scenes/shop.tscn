@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://bseavu62jtci7"]
+[gd_scene load_steps=16 format=3 uid="uid://bseavu62jtci7"]
 
 [ext_resource type="Texture2D" uid="uid://d058aqm0cbegr" path="res://assets/HUD/shopkeeper.png" id="1_h5mdx"]
 [ext_resource type="Script" path="res://scripts/shop.gd" id="1_hiyuo"]
@@ -16,6 +16,11 @@
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2cwa5"]
 size = Vector2(264, 276)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_5ji0p"]
+properties/0/path = NodePath("ShopKeeper:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
 
 [node name="Shop" type="Node2D" groups=["room"]]
 show_behind_parent = true
@@ -144,6 +149,9 @@ color = Color(1, 1, 1, 0)
 [node name="LeaveShopButton" type="Button" parent="ShopScreen/MarginContainer/GridContainer"]
 layout_mode = 2
 text = "Leave Shop"
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_5ji0p")
 
 [connection signal="area_entered" from="ShopKeeper" to="." method="_on_shop_keeper_area_entered"]
 [connection signal="area_exited" from="ShopKeeper" to="." method="_on_shop_keeper_area_exited"]

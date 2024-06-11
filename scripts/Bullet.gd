@@ -4,6 +4,11 @@ extends Area2D
 var speed:float = 100.0
 var direction = Vector2.RIGHT
 var damage_amount = 1.0
+var color = Color(1.0, 1.0, 1.0, 1.0)
+
+func _ready():
+	# set the bullet color
+	set_modulate(color)
 
 func _physics_process(delta):
 	position += direction * speed * delta

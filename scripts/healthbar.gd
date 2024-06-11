@@ -12,11 +12,14 @@ var head_sprites = {
 	"red": load("res://assets/player/head_red.png")
 }
 
+var color = Color(0.0, 0.0, 1.0, 1.0)
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	Globals.player_damaged.connect(_on_player_damaged)
 	Globals.player_healed.connect(_on_player_healed)
 	Globals.set_player_color.connect(_on_player_color_changed)
+	set_color()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -47,13 +50,20 @@ func _on_player_healed(_player_id):
 		current_health = MAX_HEALTH
 		update_pips()
 
-func _on_player_color_changed(peer_id, color):
+func _on_player_color_changed(peer_id, _color):
 	# Translate peer_id into array_id
 	var players = get_tree().get_nodes_in_group("player")
 	for p in players:
 		if p.player == peer_id:
 			var array_id = p.player_array_id
 			if player_id == array_id:
-				$Head.set_texture(head_sprites[color])
+				$Head.set_texture(head_sprites[_color])
+				color = Globals.COLORS[_color]
+				set_color()
 
+func set_color():
+	for pip in pips:
+		pip.set_modulate(color)
+	$PortaitHolder.set_modulate(color)
+	$HealthBar.set_modulate(color)
 

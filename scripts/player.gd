@@ -9,8 +9,10 @@ extends Area2D
 		$PlayerInput.set_multiplayer_authority(id)
 @export var player_array_id : int
 
-# The player's sprite options, 
-# by "color" as listed in the match/case in the change color function
+# The vec4 color to modulate to
+var color = Color(0.0, 0.0, 1.0, 1.0)
+# The player's sprite options 
+# by "color" for now
 var head_sprites = {
 	"default": load("res://assets/player/head.png"), 
 	"red": load("res://assets/player/head_red.png")
@@ -62,6 +64,9 @@ func _ready():
 	print("player array id is: " + str(player_array_id))
 	print("player unique id is: " + str(player))
 	
+	#set default color
+	color = Globals.COLORS["default"]
+	$CollisionShape2D.set_modulate(color)
 	# set the input state to true
 	can_attack = true
 	can_move = true
@@ -145,11 +150,16 @@ func _toggle_player_inputs(_id, state):
 
 func _get_moved(_id, _position):
 	if _id == player:
-		position = _position
+		var move_tween = create_tween()
+		# find variable duration based on how far you are moving
+		var duration = abs((position - _position).length()/1000.0) #1920/1000 = 1.92s to cross the full screen
+		move_tween.tween_property(self, "position", _position, duration)
 
-func _change_color(_id, color):
+func _change_color(_id, _color):
 	if _id == player:
-		$Parts/Head.set_texture(head_sprites[color])
+		$Parts/Head.set_texture(head_sprites[_color])
+		color = Globals.COLORS[_color]
+		$CollisionShape2D.set_modulate(color)
 
 
 func draw_in_front(state):
@@ -202,7 +212,7 @@ func get_target_position():
 func spawn_aoe_attack(_position:Vector2, _size:float, _timer:float, _linger:float, _damage:float):
 	var player_aoe_attack = player_aoe_attack_node.instantiate()
 	
-	player_aoe_attack.init(_position, _size, _timer, _linger, _damage)
+	player_aoe_attack.init(_position, _size, _timer, _linger, _damage, color)
 	
 	get_tree().current_scene.call_deferred("add_child", player_aoe_attack)
 
@@ -222,6 +232,7 @@ func attack1_shoot_bullet():
 		player_bullet.direction = angle
 		player_bullet.speed = attack_1["speed"]
 		player_bullet.damage_amount = attack_1["damage"]
+		player_bullet.color = color
 		
 		get_tree().current_scene.call_deferred("add_child", player_bullet)
 		

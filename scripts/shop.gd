@@ -21,7 +21,7 @@ func open_shop():
 	var peer_id = multiplayer.get_remote_sender_id()
 	print("player peer id is: " + str(peer_id))
 	
-	Globals.move_player.emit(peer_id, Vector2(960, 540))
+	Globals.move_player.emit(peer_id, Vector2(660, 840))
 	Globals.toggle_player_inputs.emit(peer_id, false)
 	
 	# only toggle the shop screen locally, even when hosting

@@ -1,7 +1,10 @@
 extends Node
 
 const BOSS_START_SPOT = Vector2(2250, 650)
-
+const COLORS = {
+	"default": Color(0.0, 0.0, 1.0, 1.0), 
+	"red": Color(1.0, 0.0, 0.0, 1.0)
+}
 
 var bosses = []
 var current_route: String = ""
