@@ -6,6 +6,9 @@ extends CanvasLayer
 func _ready():
 	Globals.boss_damaged.connect(update_boss_healthbar)
 	Globals.players_changed.connect(_on_player_count_updated)
+	Globals.update_player_target.connect(_update_player_target)
+	Globals.hide_player_target.connect(_hide_player_target)
+	
 	for i in range(player_healthbars.size()):
 		player_healthbars[i].player_id = i
 		i += 1
@@ -33,3 +36,14 @@ func _on_player_count_updated():
 	for i in range(get_tree().get_nodes_in_group("player").size()):
 		player_healthbars[i].set_visible(true)
 
+
+func _update_player_target(peer_id, current_health, max_health):
+	# Execute on the client side of the calling player
+	if multiplayer.get_unique_id() == peer_id:
+		update_boss_healthbar(current_health, max_health)
+		
+		
+func _hide_player_target(peer_id):
+	# Execute on the client side of the calling player
+	if multiplayer.get_unique_id() == peer_id:
+		hide_boss_healthbar()

@@ -37,12 +37,19 @@ func damaged(_amount):
 		$CollisionShape2D/TextureProgressBar.value = current_health
 	
 
-func targeted(on):
-	$BossSprite2D/TargetCircle.set_visible(on)
-	if on:
-		$AnimationPlayer.play("targeted")
-	else:
-		$AnimationPlayer.stop()
+func targeted(peer_id, on):
+	if multiplayer.get_unique_id() == peer_id:
+		# Set the color based on the player
+		var players = get_tree().get_nodes_in_group("player")
+		for player in players:
+			if player.player == peer_id:
+				$BossSprite2D/TargetCircle.set_modulate(player.color)
+				
+		$BossSprite2D/TargetCircle.set_visible(on)
+		if on:
+			$AnimationPlayer.play("targeted")
+		else:
+			$AnimationPlayer.stop()
 
 
 func _on_dps_timer_timeout():

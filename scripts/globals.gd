@@ -18,7 +18,9 @@ signal move_player(peer_id, _position)
 signal player_damaged(array_id)
 signal player_healed(array_id)
 signal player_died
-signal update_player_target
+signal update_player_target(peer_id, current_health, max_health)
+signal hide_player_target(peer_id)
+signal target_boss
 signal boss_damaged(current_health, max_health)
 
 

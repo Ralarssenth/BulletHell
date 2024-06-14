@@ -9,9 +9,7 @@ extends Node2D
 @export var fire_boss2_node: PackedScene
 @export var fire_boss3_node: PackedScene
 
-var current_target
-var next_target
-var current_boss_index:int = 0
+
 var room_counter:int = 0
 
 
@@ -25,7 +23,7 @@ func _ready():
 	Globals.current_route = "waiting" #default route
 	Globals.next_route = "fire"
 	Globals.bosses = get_tree().get_nodes_in_group("boss") #initialize the bosses array.
-	
+	connect_boss_signals()
 	
 	# We only need to spawn players on the server.
 	if not multiplayer.is_server():
@@ -85,14 +83,19 @@ func _exit_tree():
 func connect_boss_signals():
 	for boss in Globals.bosses:
 		print("connecting: " + str(Globals.bosses))
-		boss.connect("tree_exited", _on_boss_tree_exited.bind(boss))
+		boss.connect("tree_exiting", _on_boss_tree_exiting.bind(boss))
 
 
 # When a boss despawns on kill
 # Updates the player target to new valid target and updates the HUD
-func _on_boss_tree_exited(_boss):
-	$HUD.hide_boss_healthbar()
+func _on_boss_tree_exiting(_boss):
+	# Update target of all players in the room
+	# Players that were not targeting the exiting boss will not be affected 
+	var current_players = get_tree().get_nodes_in_group("player")
+	for player in current_players:
+		player.update_player_target()
 	
+	# Activate the ready area when there are no more bosses in the room
 	if Globals.bosses.is_empty():
 		print("last boss removed")
 		$ReadyArea.activate(true)
@@ -149,7 +152,9 @@ func change_room_scene():
 					# (May have to adjust where this goes for multibosses)
 					next_boss_instance.position = Globals.BOSS_START_SPOT #put the boss in the starting position
 					await get_tree().create_timer(transition_timer + 1.0).timeout
-					$Bosses.call_deferred("add_child", next_boss_instance)
+					# Only spawn server side
+					if multiplayer.is_server():
+						$Bosses.call_deferred("add_child", next_boss_instance)
 					Globals.bosses.append(next_boss_instance) # Fill the bosses array
 					
 				1:
@@ -159,7 +164,9 @@ func change_room_scene():
 					# (May have to adjust where this goes for multibosses)
 					next_boss_instance.position = Globals.BOSS_START_SPOT #put the boss in the starting position
 					await get_tree().create_timer(transition_timer + 1.0).timeout
-					$Bosses.call_deferred("add_child", next_boss_instance)
+					# Only spawn server side
+					if multiplayer.is_server():
+						$Bosses.call_deferred("add_child", next_boss_instance)
 					Globals.bosses.append(next_boss_instance) # Fill the bosses array
 				
 				2:
@@ -169,7 +176,9 @@ func change_room_scene():
 					# (May have to adjust where this goes for multibosses)
 					next_boss_instance.position = Globals.BOSS_START_SPOT #put the boss in the starting position
 					await get_tree().create_timer(transition_timer + 1.0).timeout
-					$Bosses.call_deferred("add_child", next_boss_instance)
+					# Only spawn server side
+					if multiplayer.is_server():
+						$Bosses.call_deferred("add_child", next_boss_instance)
 					Globals.bosses.append(next_boss_instance) # Fill the bosses array
 					
 				3:
@@ -179,7 +188,9 @@ func change_room_scene():
 					# (May have to adjust where this goes for multibosses)
 					
 					await get_tree().create_timer(transition_timer + 1.0).timeout
-					$Bosses.call_deferred("add_child", next_boss_instance)
+					# Only spawn server side
+					if multiplayer.is_server():
+						$Bosses.call_deferred("add_child", next_boss_instance)
 					$ReadyArea.activate(true) # Reactivate the ready area
 					
 				4:
@@ -193,7 +204,9 @@ func change_room_scene():
 					# (May have to adjust where this goes for multibosses)
 					next_boss_instance.position = Globals.BOSS_START_SPOT #put the boss in the starting position
 					await get_tree().create_timer(transition_timer + 1.0).timeout
-					$Bosses.call_deferred("add_child", next_boss_instance)
+					# Only spawn server side
+					if multiplayer.is_server():
+						$Bosses.call_deferred("add_child", next_boss_instance)
 					Globals.bosses.append(next_boss_instance) # Fill the bosses array
 				_:
 					print("change_boss defaulted in fire route")
@@ -210,5 +223,5 @@ func change_room_scene():
 	# ready area becomes visible when there is an active player 
 	if Globals.current_route == "waiting":
 		$ReadyArea.activate(true) # Reactivate the ready area
-	else:
-		connect_boss_signals()
+	
+	connect_boss_signals()

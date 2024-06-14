@@ -66,5 +66,10 @@ func _process(delta):
 		toggle_tight_hitbox.rpc(true)
 	else:
 		toggle_tight_hitbox.rpc(false)
+	
+	
+func _unhandled_input(event):
+	if event.is_action_released("shift"):
+		get_parent().iterate_target()
 
 

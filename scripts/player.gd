@@ -37,6 +37,9 @@ var current_move_state = MOVE_STATE.IDLE
 
 # Targeting
 var current_target = self
+var next_target = self
+var previous_target = self
+var current_boss_index:int = 0
 
 
 # Attack stats
@@ -67,12 +70,18 @@ func _ready():
 	#set default color
 	color = Globals.COLORS["default"]
 	$CollisionShape2D.set_modulate(color)
+	
 	# set the input state to true
 	can_attack = true
 	can_move = true
+	
 	#set the initial target
-	current_target = self
+	update_player_target()
+	
+	# activate client-side always-draw-on-top for player character
 	draw_in_front(true)
+	
+	# emit signal when number of players changes
 	Globals.players_changed.emit()
 
 
@@ -107,6 +116,7 @@ func move_and_animate(delta):
 	elif velocity.x < 0: 
 		set_move_state(MOVE_STATE.BACKWARD)
 	
+	# The toggle tight function changes the speed variable
 	# Check for tight toggle BEFORE calculating velocity
 	toggle_tight(input.tight)
 	
@@ -142,12 +152,21 @@ func toggle_tight(on):
 			speed = current_speed / 2
 		else:
 			speed = current_speed
+# ---------------------------------------------------------------
 
+
+# ---------------------------------------------------------------
+# This section is for logic that is called on one specific player
+# ----------------------------------------------------------------
+
+# Toggle the attack and move booleans to allow or disallow inputs
+# Used to turn off attacks in menus etc.
 func _toggle_player_inputs(_id, state):
 	if _id == player:
 		can_attack = state
 		can_move = state
 
+# Move a player to a position
 func _get_moved(_id, _position):
 	if _id == player:
 		var move_tween = create_tween()
@@ -155,20 +174,29 @@ func _get_moved(_id, _position):
 		var duration = abs((position - _position).length()/1000.0) #1920/1000 = 1.92s to cross the full screen
 		move_tween.tween_property(self, "position", _position, duration)
 
+# Change a player's color scheme
 func _change_color(_id, _color):
 	if _id == player:
 		$Parts/Head.set_texture(head_sprites[_color])
 		color = Globals.COLORS[_color]
 		$CollisionShape2D.set_modulate(color)
+		update_player_hud()
 
-
+# Draw self on top client side
+# (A player should always be drawn on the top on their own screen)
 func draw_in_front(state):
 	var peer_id = multiplayer.get_unique_id()
 	if peer_id == player:
 		top_level = state
 		print(str(peer_id) + "called to draw player" + str(player) + "in front")
+# --------------------------------------------------------
 
 
+# ---------------------------------------------------------
+# This section deals with player taking damage logic
+# --------------------------------------------------------
+
+# Check for attack hitboxes
 func _on_area_entered(area):
 	print("player area entered")
 	if area.is_in_group("enemy_hitbox"):
@@ -177,36 +205,136 @@ func _on_area_entered(area):
 		area.queue_free()
 
 
+# Take damage
 func damaged():
 	if $InvulnTimer.is_stopped():
 		print("player took damage")
 		Globals.player_damaged.emit(player_array_id)
 	
 		# give the player 1.0s of invuln
-		invuln(1.0, "damaged")
+		player_invuln(1.0, "damaged")
 
 
-func invuln(duration:float, animation:String):
-	if $InvulnTimer.is_stopped() or animation == "defensive":
+# Apply an invuln 
+func player_invuln(duration:float, animation:String):
+	# only using a defensive should interrupt an existing invuln
+	if $InvulnTimer.is_stopped() or animation == "defensive": 
 		$InvulnTimer.set_wait_time(duration)
 		$InvulnTimer.start()
 		$ColorAnimationPlayer.play(animation)
+# ------------------------------------------------------------
 
+
+# ------------------------------------------------------------
 # This is currently a stub for the player death logic
+# ------------------------------------------------------------
+
 func _on_player_died():
 	queue_free()
+	
+func _on_tree_exiting():
+	# emit signal when number of players changes
+	Globals.players_changed.emit()
+# --------------------------------------------------------------
 
 
+# ---------------------------------------------------------------
+# This section is for targeting logic
+# ---------------------------------------------------------------
 
-# Gets the array of bosses and assigns target to the first entry. 
+# Checks if the target is still valid, then returns its position
+# If it is not valid, updates the target, then returns that target's position 
 func get_target_position():
 	var target_position
 	if is_instance_valid(current_target): #check that target is still valid
 		target_position = current_target.get_global_position()
 	else:
-		emit_signal("update_target")
+		update_player_target()
 		target_position = current_target.get_global_position()
 	return target_position
+
+# Updates the current target, including checking for validity
+func update_player_target():
+	previous_target = current_target
+	# If targeting self, but there are bosses, target the first boss instead, 
+	# Otherwise keep targeting self
+	if current_target == self: 
+		if not Globals.bosses.is_empty():
+			current_boss_index = 0
+			next_target = Globals.bosses[current_boss_index]
+		
+		else:
+			next_target = self
+		
+	# If targeting a boss...
+	else:
+		# but there are no bosses, retarget self
+		if Globals.bosses.is_empty():
+			next_target = self
+		# and there is one or more bosses, target the boss at current_boss_index
+		else:
+			# check if the current_boss_index is in range first, and if not, set it back to 0
+			if current_boss_index >= (Globals.bosses.size()): #wrap back to 0
+				current_boss_index = 0
+			
+			next_target = Globals.bosses[current_boss_index]
+	
+	current_target = next_target
+	# Update the client side hud
+	update_player_hud()
+
+# Updates the hud client-side to indicate the local player's target
+func update_player_hud():
+	# Only update boss huds when the boss is targeted
+	if current_target != self:
+		# Check to be sure next target is still valid (in cases of multikills)
+		if is_instance_valid(current_target):
+			# Always target the new target
+			# Pass the player unique id for client-side reticle on the boss sprite
+			Globals.target_boss.emit(player, current_target, true)
+			# Signal the hud to update the healthbar to the new boss'
+			Globals.update_player_target.emit(player, current_target.current_health, current_target.max_health)
+	
+	# when the player is the target, send the hide huds signal
+	else:
+		Globals.hide_player_target.emit(player)
+		
+	# Tell the previous boss to turn off its targeted sprite
+	# Don't turn off if target is the same, or if the previous target was the player
+	if (previous_target != current_target) and (previous_target != self):
+		# Check if current target still exists before changing sprite
+		if is_instance_valid(previous_target): 
+			Globals.target_boss.emit(player, previous_target, false)
+	
+	# tracking print
+	print(str(current_target) + ": targeted")
+	
+# Iterates through multiple targets, if any
+func iterate_target():
+	# Check if a boss exists, and set the boss index
+	if not Globals.bosses.is_empty():
+		if current_target == self:
+			current_boss_index = 0
+		else:
+			current_boss_index += 1
+		
+		# Check if the new index is in range and wrap to 0
+		if current_boss_index >= (Globals.bosses.size()): 
+			current_boss_index = 0 #wrap back to 0
+		
+		update_player_target()
+
+	# NOTE: All these checks also exist in update_player_target, this function -could- just be:
+	# current_boss_index += 1
+	# update_player_target()
+	# but it would be less predictable
+# ------------------------------------------------------------------------
+
+
+# ------------------------------------------------------------------------
+# Everything in this next section is about player attacks (and defensive)
+# Might relocate once classes exist to the class script
+# -------------------------------------------------------------------------
 
 # Helper function for spawning circle attacks
 func spawn_aoe_attack(_position:Vector2, _size:float, _timer:float, _linger:float, _damage:float):
@@ -280,14 +408,15 @@ func attack3_aoe_self():
 		attack1_cooldown_animation(attack_3["GCD"])
 		attack2_cooldown_animation(attack_3["GCD"])
 		attack3_cooldown_animation(attack_3["GCD"])
-	
+
+# An invulnerability buff
 func defensive():
 	if $DefensiveCDTimer.is_stopped():
 		speed = BASE_SPEED * defensive_stats["speed_multiplier"]
 		current_speed = speed
 		$DefensiveCDTimer.set_wait_time(defensive_stats["cooldown"])
 		$DefensiveCDTimer.start()
-		invuln(defensive_stats["duration"], "defensive")
+		player_invuln(defensive_stats["duration"], "defensive")
 		defensive_cooldown_animation()
 
 
@@ -317,6 +446,8 @@ func defensive_cooldown_animation():
 	tweens[3] = create_tween()
 	tweens[3].tween_property($DefensiveProgressBar, "value", 0.0, defensive_stats["cooldown"])
 
+# Resets all the player cooldowns
+# Called between rooms/ screens/ bosses
 func reset_cooldowns():
 	# reset the button visuals
 	for tween in tweens:
@@ -333,6 +464,5 @@ func reset_cooldowns():
 	$GCDTimer.stop()
 	$DefensiveCDTimer.stop()
 
+# ------------------------------------------------------------------
 
-func _on_tree_exiting():
-	Globals.players_changed.emit()
