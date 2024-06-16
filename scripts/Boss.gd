@@ -43,8 +43,8 @@ func targeted(peer_id, boss, on):
 		return
 		
 	# Execute on the client side of the calling player
-	#if multiplayer.get_unique_id() == peer_id:
-	is_targeted = on
+	if multiplayer.get_unique_id() == peer_id:
+		is_targeted = on
 	# Set the color based on the player
 	for player in players:
 		if player.player == peer_id:
