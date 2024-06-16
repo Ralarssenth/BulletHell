@@ -106,4 +106,3 @@ one_shot = true
 replication_config = SubResource("SceneReplicationConfig_573x3")
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
-[connection signal="tree_exiting" from="." to="." method="_on_tree_exiting"]

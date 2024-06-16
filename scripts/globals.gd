@@ -20,7 +20,7 @@ signal player_healed(array_id)
 signal player_died
 signal update_player_target
 signal boss_damaged(current_health, max_health)
-
+signal no_bosses_left()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

@@ -11,6 +11,8 @@ var dps_remainder:float = 0.0
 func _ready():
 	position = Vector2(990.0, 550.0)
 	
+	Globals.bosses.append(self) # Fill the bosses array
+	
 	$CollisionShape2D/TextureProgressBar.max_value = max_health
 	$CollisionShape2D/TextureProgressBar.value = current_health
 	dps_health = max_health

@@ -9,6 +9,8 @@ var players = []
 func _ready():
 	$CollisionShape2D/TextureProgressBar.max_value = max_health
 	$CollisionShape2D/TextureProgressBar.value = current_health
+	Globals.bosses.append(self) # Fill the bosses array
+	print("boss added to array, size is now: " + str(Globals.bosses.size()))
 	players = get_tree().get_nodes_in_group("player")
 	setup()
 
@@ -29,7 +31,7 @@ func damaged(_amount):
 	Globals.emit_signal("boss_damaged", current_health, max_health)
 	
 	if current_health <= 0:
-		queue_free()
+		destroy_self.rpc()
 
 
 func targeted(on):
@@ -40,6 +42,12 @@ func targeted(on):
 		$AnimationPlayer.stop()
 
 
-func _on_tree_exiting():
+
+@rpc("any_peer", "call_local")
+func destroy_self():
 	Globals.bosses.erase(self)
 	print("size of boss array now: " + str(Globals.bosses.size()))
+	if Globals.bosses.is_empty():
+		print("last boss removed")
+		Globals.no_bosses_left.emit()
+	queue_free()

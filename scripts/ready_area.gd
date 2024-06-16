@@ -7,6 +7,7 @@ signal change_room_scene
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	Globals.no_bosses_left.connect(_no_bosses_left)
 	$TimerLabel.text = "Ready!"
 
 
@@ -50,3 +51,6 @@ func _on_timer_timeout():
 func activate(_on):
 	set_visible(_on)
 	$CollisionShape2D.set_deferred("disabled", not _on)
+
+func _no_bosses_left():
+	activate(true)
